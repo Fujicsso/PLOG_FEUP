@@ -16,8 +16,6 @@ escreveu(eca, os_maias).
 escreveu(eca, memorial_do_convento).
 
 tipo_livro(os_maias, romance).
-% tipo_livro(os_maias, tipo[romance]).
-
 tipo_livro(memorial_do_convento, ficcao).
 
 
