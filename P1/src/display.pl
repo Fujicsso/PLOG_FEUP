@@ -2,7 +2,7 @@ startGame :-
     initialBoard(Board),
     displayGameName,
     display_game(Board, Player),
-    ansi_format([bold,fg(yellow)], 'Hello ~w', [world]).
+    ansi_format([bold,fg(cyan)], 'Hello ~w', [world]).
 
 
 initialBoard(
@@ -17,19 +17,11 @@ initialBoard(
 
 
 cell(white, C) :-
-    C = 'o'.
+    C = '0'.
 cell(black, C) :-
     C = 'X'.
 cell(empty, C) :-
     C = '.'.
-
-
-cellColor(white, C) :-
-    C = 'white'.
-cellColor(black, C) :-
-    C = 'black'.
-cellColor(empty, C) :-
-    C = 'yellow'.
 
 
 displayGameName :-
@@ -63,8 +55,7 @@ printCoordLetters :-
     nl.
 
 printHeader :-
-    % write('-----------------------------------------'),
-    ansi_format([bold,fg(yellow)], '~w', [-----------------------------------------]),
+    write('-----------------------------------------'),
     nl.
 
 printEmpty :-
@@ -76,18 +67,7 @@ printLineWithCell([]).
 
 printLineWithCell([Head|Tail]) :-
     cell(Head, Char),
-    cellColor(Head, Color),
-    % write('   '), write(Char), write('   |'),
-    % ansi_format([bold,fg(yellow)], '   ', []), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    ansi_format([bold,fg(yellow)], '~w', [Char]), 
-    % ansi_format([bold,fg(yellow)], '   |', []),
-    ansi_format([bold,fg(yellow)], '|', []),
+    write('   '), write(Char), write('   |'),
     printLineWithCell(Tail).
 
 
@@ -95,17 +75,12 @@ printMatrix([], _).
 
 printMatrix([Head|Tail], Index) :-
     write('   '),
-    % printEmpty,
-    ansi_format([bold,fg(yellow)], '|', []),
-    printLineWithCell(Head), nl,
-    write(' '), write(Index), write(' '),
+    printEmpty,
+    write(' '), write(Index), write(' |'),
     NextIndex is Index + 1,
-    ansi_format([bold,fg(yellow)], '|', []),
     printLineWithCell(Head), nl,
     write('   '),
-    % printEmpty,
-    ansi_format([bold,fg(yellow)], '|', []),
-    printLineWithCell(Head), nl,
+    printEmpty,
     write('   '),
     printHeader,
     printMatrix(Tail, NextIndex).    
