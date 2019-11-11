@@ -15,20 +15,6 @@ mainMenu1:-
 	).
 
 
-%------------MAIN MENU PRINT---------------
-
-printMainMenu:-
-	clearTheConsole,
-	displayGameName,
-	spacerCenterBox, write(' -------------------------------'), nl,
-	spacerCenterBox, write('|             Menu1             |'), nl,
-	spacerCenterBox, write('|                               |'), nl,
-	spacerCenterBox, write('|   1. Play a match             |'), nl,
-	spacerCenterBox, write('|   2. Exit                     |'), nl,
-	spacerCenterBox, write('|                               |'), nl,
-	spacerCenterBox, write(' -------------------------------'), nl,
-	spacerCenterBox, write('Choose an option(without the dot):'), nl.
-
 %----------GAME MODE MENU-------------
 
 gameModeMenu:-
@@ -45,22 +31,6 @@ gameModeMenu:-
 		pressEnterToContinue, nl,
 		gameModeMenu
 	).
-
-%------------GAME MODE MENU PRINT---------------
-
-printgameModeMenu:-
-	clearTheConsole,
-	displayGameName,
-	spacerCenterBox, write(' -------------------------------'), nl,
-	spacerCenterBox, write('|           Game Mode           |'), nl,
-	spacerCenterBox, write('|                               |'), nl,
-	spacerCenterBox, write('|   1. Player vs. Player        |'), nl,
-	spacerCenterBox, write('|   2. Player vs. Computer      |'), nl,
-	spacerCenterBox, write('|   3. Computer vs. Computer    |'), nl,
-	spacerCenterBox, write('|   4. Back                     |'), nl,
-	spacerCenterBox, write('|                               |'), nl,
-	spacerCenterBox, write(' -------------------------------'), nl,
-	spacerCenterBox, write('Choose an option(without the dot):'), nl.
 
 	
 %------------STARTS PLAYER VS PLAYER------------
