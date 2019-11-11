@@ -26,27 +26,3 @@ spacerTableTop:-
     write('  ').
 
 
-% Reads Move Input
-
-getCoordsPlayer(NLine, NCol):-
-	write('Type Board Coordinates Of The Piece You Want To Move: (Column. <enter> Line.)'), nl,
-	read(NCol), nl,read(NLine)
-    (
-    NCol == 'A' -> ;
-	NCol == 'B' -> ;
-	NCol == 'C' -> ;
-	NCol == 'D' -> ;
-    NCol == 'E' -> ;
-
-    NLine == '1' -> ;
-	NLine == '2' -> ;
-	NLine == '3' -> ;
-	NLine == '4' -> ;
-    NLine == '5' -> ;
-    
-    )
-
-% Reads and Validates Move Input
-
-getMovePlayer(Move1,Again):-
-    
