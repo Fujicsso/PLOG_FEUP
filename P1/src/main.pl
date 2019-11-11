@@ -1,6 +1,7 @@
 :- include('menu.pl').
 :- include('display.pl').
 :- include('utils.pl').
+:- include('playerPlay.pl').
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
 :- use_module(library(between)).
@@ -12,4 +13,9 @@
 
 menu:- mainMenu1.
 
-startGame:- startGameP.
+startGame:-
+    startGameDisplay,
+    play(Game).
+
+play(Game):-
+    
