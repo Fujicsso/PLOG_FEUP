@@ -1,8 +1,8 @@
 
 
-startGame :-
+startGameP :-
     lastBoard(Board),
-    displayGameName,
+    clearTheConsole,
     display_game(Board, Player).
 
 testGame :-
@@ -103,7 +103,7 @@ displayGameName :-
     write('         |__|  |__| |______|  |_______| |____  $$ |_______|      '), nl,
     write('                                         $$  | $$|               '), nl,
     write('                                        |_ $$$$$$|               '), nl,
-    write('                                          |____|                 '), nl, nl, nl.
+    write('                                          |____|                 '), nl, nl, nl, nl, nl, nl, nl.
 
 
 display_game(Board, Player) :-
@@ -118,19 +118,19 @@ printBoard(Board) :-
 
 
 printCoordLetters :-
-    write('               A       B       C       D       E    '),
+    spacerTableTop, write('               A       B       C       D       E    '),
     nl.
 
 printHeader :-
-    write('           -----------------------------------------'),
+    spacerTableTop, write('           -----------------------------------------'),
     nl.
 
 printEmpty :-
-    write('           |       |       |       |       |       |'),
+    spacerTableTop, write('           |       |       |       |       |       |'),
     nl.
 
 printBlank :-
-    write('                                                    '),
+    spacerTableTop, write('                                                    '),
     nl.
 
 
@@ -166,6 +166,7 @@ printMatrix([Head|Tail], Index) :-
 
     write('   '),
     printEmpty,
+    spacerTableTop, 
     write('    '), write(Index), write('  '),
     NextIndex is Index + 1,
     printLineWithCell(Head, 1), nl,
