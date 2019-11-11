@@ -1,6 +1,6 @@
 
 
-startGameP :-
+startGameDisplay :-
     lastBoard(Board),
     clearTheConsole,
     display_game(Board, Player).
@@ -90,7 +90,7 @@ cell(black, C) :-
 cell(empty, C) :-
     C = ' '.
 
-
+% ------------- PRINT GAME NAME ---------------
 displayGameName :-
     nl,
     write('         / $$    $$                | $$                          '), nl,  
@@ -134,9 +134,12 @@ printBlank :-
     nl.
 
 
+%  ---------- PRINT LINE OF MATRIX -------------
+
 printLineWithCell([]).
 printLineWithCellOut([]).
 
+%  ---------- PRINT LINE OF MATRIX with cells -------------
 printLineWithCell([Head|Tail], Ind) :-
     Ind = 7 -> (cell(Head, Char), write('   '), write(Char), write('   '), printLineWithCell(Tail));
     cell(Head, Char),
@@ -144,12 +147,15 @@ printLineWithCell([Head|Tail], Ind) :-
     NextInd is Ind + 1,
     printLineWithCell(Tail, NextInd).
 
+%  ---------- PRINT LINE OF MATRIX with no cells -------------
 printLineWithCellOut([Head|Tail]) :-
     cell(Head, Char),
     write('   '), write(Char), write('    '),
     printLineWithCellOut(Tail).
 
 
+
+%  ---------- PRINT MATRIX -------------
 printMatrix([], _).
 
 printMatrix([Head|Tail], Index) :-
@@ -176,3 +182,33 @@ printMatrix([Head|Tail], Index) :-
     printHeader,
     printMatrix(Tail, NextIndex).    
 
+
+%------------GAME MODE MENU PRINT---------------
+
+printgameModeMenu:-
+	clearTheConsole,
+	displayGameName,
+	spacerCenterBox, write(' -------------------------------'), nl,
+	spacerCenterBox, write('|           Game Mode           |'), nl,
+	spacerCenterBox, write('|                               |'), nl,
+	spacerCenterBox, write('|   1. Player vs. Player        |'), nl,
+	spacerCenterBox, write('|   2. Player vs. Computer      |'), nl,
+	spacerCenterBox, write('|   3. Computer vs. Computer    |'), nl,
+	spacerCenterBox, write('|   4. Back                     |'), nl,
+	spacerCenterBox, write('|                               |'), nl,
+	spacerCenterBox, write(' -------------------------------'), nl,
+	spacerCenterBox, write('Choose an option(without the dot):'), nl.
+
+%------------MAIN MENU PRINT---------------
+
+printMainMenu:-
+	clearTheConsole,
+	displayGameName,
+	spacerCenterBox, write(' -------------------------------'), nl,
+	spacerCenterBox, write('|             Menu1             |'), nl,
+	spacerCenterBox, write('|                               |'), nl,
+	spacerCenterBox, write('|   1. Play a match             |'), nl,
+	spacerCenterBox, write('|   2. Exit                     |'), nl,
+	spacerCenterBox, write('|                               |'), nl,
+	spacerCenterBox, write(' -------------------------------'), nl,
+	spacerCenterBox, write('Choose an option(without the dot):'), nl.

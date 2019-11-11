@@ -40,7 +40,7 @@ manageInput(4).
 
 startPvPGame:-
 	write('Starting Game!\n').
-	
+
 
 %------------STARTS PLAYER VS AI---------------
 
