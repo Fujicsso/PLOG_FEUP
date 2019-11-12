@@ -83,13 +83,6 @@ lastBoard(
     ).
 
 
-cell(white, C) :-
-    C = '0'.
-cell(black, C) :-
-    C = 'X'.
-cell(empty, C) :-
-    C = ' '.
-
 % ------------- PRINT GAME NAME ---------------
 displayGameName :-
     nl,
@@ -106,7 +99,7 @@ displayGameName :-
     write('                                          |____|                 '), nl, nl, nl, nl, nl, nl, nl.
 
 
-display_game(Board, Player) :-
+display_game(Board) :-
     printBoard(Board).
 
 

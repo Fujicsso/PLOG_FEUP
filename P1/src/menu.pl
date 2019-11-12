@@ -25,30 +25,37 @@ printMainMenu:-
 
 
 manageInput(1) :-
-	startPvPGame.
+	startGame('P', 'P').
 
-manageInput(2) :-
-	startPvBGame.
+% manageInput(2) :-
+% 	startGame('P', 'C').
 
-manageInput(3) :-
-	startBvBGame.
+% manageInput(3) :-
+% 	startGame('C', 'C').
 
 manageInput(4).
 
+
+startGame('P', 'P') :-
+	initialBoard(Board),
+	gamePvP(Board, black, white).
 	
 %------------STARTS PLAYER VS PLAYER------------
 
-startPvPGame:-
-	write('Starting Game!\n').
+
+gamePvP(Board, Player1, Player2) :-
+	write('Starting Game!\n'),
+	display_game(Board),
+	choose_move(Player1).	%black
+	% choose_move(Player2).	%white
+	% gamePvP(Player1, Player2).
+
 
 
 %------------STARTS PLAYER VS AI---------------
-
-%startPvBGame:-
 
 
 
 %------------STARTS AI VS AI---------------
 
-%startBvBGame:-
 

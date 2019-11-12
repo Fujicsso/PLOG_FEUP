@@ -1,10 +1,22 @@
 
+cell(white, C) :-
+    C = '0'.
+cell(black, C) :-
+    C = 'X'.
+cell(empty, C) :-
+    C = ' '.
+
+player(black).
+player(white).
+
+
 %  Consule Cleanage
 
 clearTheConsole:-
 	clearTheConsole(40), !.
 
 clearTheConsole(0).
+
 clearTheConsole(N):-
 	nl,
 	N1 is N-1,
@@ -15,7 +27,7 @@ clearTheConsole(N):-
 %  Input of 1 Char
 getChar(Input):-
     get_char(Input),
-    get_char(_).
+    skip_line.  
 
 % Spaces to Center Boxes
 spacerCenterBox:-
