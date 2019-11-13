@@ -22,29 +22,29 @@ get_move(Move) :-
 
 
 %  MOVES OUT OF BOUNDARIES
-validate_boundaries(Board, 'U', 0, CurrentColumn):-
+validate_boundaries(Board, 'U', 1, CurrentColumn):-
     write('ERROR: That move is not valid! UP\n\n'),
-    write('Row: '), write('0\n'), write('Column: '), write(CurrentColumn), 
+    write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
     write('\n'),
     get_move(M),
-    validate_boundaries(Board, M, 0, CurrentColumn).
+    validate_boundaries(Board, M, 1, CurrentColumn).
 
-validate_boundaries(Board, 'D', 4, CurrentColumn):-
+validate_boundaries(Board, 'D', 5, CurrentColumn):-
     write('ERROR: That move is not valid! DOWN\n\n'),
-    write('Row: '), write('4\n'), write('Column: '), write(CurrentColumn), 
+    write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
     write('\n'),
     get_move(M),
-    validate_boundaries(Board, M, 4, CurrentColumn).
+    validate_boundaries(Board, M, 5, CurrentColumn).
 
-validate_boundaries(Board, 'R', CurrentRow, 4):-
+validate_boundaries(Board, 'R', CurrentRow, 5):-
     write('ERROR: That move is not valid! RIGHT\n\n'),
     get_move(M),
-    validate_boundaries(Board, M, CurrentRow, 4).
+    validate_boundaries(Board, M, CurrentRow, 5).
 
-validate_boundaries(Board, 'L', CurrentRow, 0):-
+validate_boundaries(Board, 'L', CurrentRow, 1):-
     write('ERROR: That move is not valid! LEFT\n\n'),
     get_move(M),
-    validate_boundaries(Board, M, CurrentRow, 0).
+    validate_boundaries(Board, M, CurrentRow, 1).
 
 validate_boundaries(Board, _Move, CurrentRow, CurrentRow):-
     write('\nACCEPTED MOVE\n\n').
@@ -54,6 +54,13 @@ validate_boundaries(Board, _Move, CurrentRow, CurrentRow):-
 %     write('ERROR: That move is not valid! DEFAULT\n\n'),
 %     get_move(M),
 %     validate_move(Board, M, CurrentRow, CurrentColumn).
+
+
+validate_cell(Player, CurrentRow, CurrentRow) :-
+    getValueFromMatrix(Board, CurrentRow, CurrentColumn, Elem),
+    write('Player: '), write(Player), write('\n'),
+    write('Elem: '), write(Elem), write('\n').
+
 
 
 
@@ -78,35 +85,35 @@ readColumn(Column) :-
 
 
 validateRow(1, CurrentRow) :-
-    CurrentRow = 0.
-
-validateRow(2, CurrentRow) :-
     CurrentRow = 1.
 
-validateRow(3, CurrentRow) :-
+validateRow(2, CurrentRow) :-
     CurrentRow = 2.
 
-validateRow(4, CurrentRow) :-
+validateRow(3, CurrentRow) :-
     CurrentRow = 3.
 
-validateRow(5, CurrentRow) :-
+validateRow(4, CurrentRow) :-
     CurrentRow = 4.
+
+validateRow(5, CurrentRow) :-
+    CurrentRow = 5.
 
 
 validateColumn('A', CurrentColumn) :-
-    CurrentColumn = 0.
-
-validateColumn('B', CurrentColumn) :-
     CurrentColumn = 1.
 
-validateColumn('C', CurrentColumn) :-
+validateColumn('B', CurrentColumn) :-
     CurrentColumn = 2.
 
-validateColumn('D', CurrentColumn) :-
+validateColumn('C', CurrentColumn) :-
     CurrentColumn = 3.
 
-validateColumn('E', CurrentColumn) :-
+validateColumn('D', CurrentColumn) :-
     CurrentColumn = 4.
+
+validateColumn('E', CurrentColumn) :-
+    CurrentColumn = 5.
 
 validateColumn(_Row, CurrentColumn) :-
     not(_Row=='A'),

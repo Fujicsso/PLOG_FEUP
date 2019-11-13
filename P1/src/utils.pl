@@ -60,7 +60,6 @@ getValueFromList([_H|T], Index, Value) :-
     getValueFromList(T, Index1, Value).
 
 getValueFromMatrix([H|_T], 0, Column, Value) :-
-    write('cenas\n'),
     getValueFromList(H, Column, Value).
 
 getValueFromMatrix([_H|T], Row, Column, Value) :-
@@ -68,5 +67,4 @@ getValueFromMatrix([_H|T], Row, Column, Value) :-
     Row1 is Row - 1,
     getValueFromMatrix(T, Row1, Column, Value).
 
-getValueFromMatrix(_He, Row, Column, Value) :-
-    write('Merda qui fds\n').
+% getValueFromMatrix(_He, Row, Column, Value).
