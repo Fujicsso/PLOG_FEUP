@@ -19,56 +19,57 @@ get_move(Move) :-
     read(Char),
     Move = Char,
     write(Move).
-                
+
 
 %  MOVES OUT OF BOUNDARIES
 validate_move(Board, 'U', 1, CurrentColumn):-
     write('ERROR: That move is not valid! UP\n\n'),
-    get_move(Move),
-    validate_move(Board, Move, CurrentRow, CurrentColumn).
+    get_move(M),
+    validate_move(Board, M, CurrentRow, CurrentColumn).
 
 validate_move(Board, 'D', 5, CurrentColumn):-
     write('ERROR: That move is not valid! DOWN\n\n'),
-    get_move(Move),
-    validate_move(Board, Move, CurrentRow, CurrentColumn).
+    get_move(M),
+    validate_move(Board, M, CurrentRow, CurrentColumn).
 
 validate_move(Board, 'R', CurrentRow, 5):-
     write('ERROR: That move is not valid! RIGHT\n\n'),
-    get_move(Move),
-    validate_move(Board, Move, CurrentRow, CurrentColumn).
+    get_move(M),
+    validate_move(Board, M, CurrentRow, CurrentColumn).
 
 validate_move(Board, 'L', CurrentRow, 1):-
     write('ERROR: That move is not valid! LEFT\n\n'),
-    get_move(Move),
-    validate_move(Board, Move, CurrentRow, CurrentColumn).
+    get_move(M),
+    validate_move(Board, M, CurrentRow, CurrentColumn).
 
 % MOVES OK
 
 validate_move(Board, 'U', CurrentRow, CurrentColumn):-
     isEqual(CurrentRow, 1),
     validate_move(Board, 'U', 1, CurrentColumn);
-    write('INPUT accepted UP\n').
+    write('INPUT accepted UP\n').    
 
 validate_move(Board, 'D', CurrentRow, CurrentColumn):-
     isEqual(CurrentRow, 5),
     validate_move(Board, 'D', 5, CurrentColumn);
-    write('INPUT accepted DOWN\n').
+    write('INPUT accepted DOWN\n').    
 
 validate_move(Board, 'R', CurrentRow, CurrentColumn):-
     isEqual(CurrentColumn, 5),
     validate_move(Board, 'R', CurrentRow, 5);
-    write('INPUT accepted RIGHT\n').
+    write('INPUT accepted RIGHT\n').    
 
 validate_move(Board, 'L', CurrentRow, CurrentColumn):-
     isEqual(CurrentColumn, 1),
     validate_move(Board, 'L', CurrentRow, 1);
     write('INPUT accepted LEFT\n').
 
+
 % DEFAULT
-validate_move(Board, Move, CurrentRow, CurrentColumn) :-
+validate_move(Board, _Move, CurrentRow, CurrentColumn) :-
     write('ERROR: That move is not valid! DEFAULT\n\n'),
-    get_move(Move),
-    validate_move(Board, Move, CurrentRow, CurrentColumn).
+    get_move(M),
+    validate_move(Board, M, CurrentRow, CurrentColumn).
 
 
 
