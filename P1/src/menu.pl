@@ -46,7 +46,7 @@ startGame('P', 'P') :-
 gamePvP(Board, Player1, Player2) :-
 	write('Starting Game!\n'),
 	display_game(Board),
-	choose_move(Player1).	%black
+	choose_move(Board, Player1).	%black
 	% choose_move(Player2).	%white
 	% gamePvP(Player1, Player2).
 
