@@ -24,11 +24,16 @@ get_move(Move) :-
 %  MOVES OUT OF BOUNDARIES
 validate_move(Board, 'U', 1, CurrentColumn):-
     write('ERROR: That move is not valid! UP\n\n'),
+    write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
+    write('\n'),
     get_move(M),
-    validate_move(Board, M, CurrentRow, CurrentColumn).
+    validate_move(Board, M, 1, CurrentColumn).
 
 validate_move(Board, 'D', 5, CurrentColumn):-
     write('ERROR: That move is not valid! DOWN\n\n'),
+    write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
+    write('\n'),
+
     get_move(M),
     validate_move(Board, M, CurrentRow, CurrentColumn).
 
