@@ -38,3 +38,10 @@ spacerTableTop:-
     write('  ').
 
 
+%----------COMPARISON-----------
+
+isEqual(A,B):-
+	A == B.
+
+isNotEqual(A,B):-
+	not(A == B).

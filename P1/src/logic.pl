@@ -1,9 +1,11 @@
 choose_move(Player) :-
     write('Choose the coords for the cell to move.\n'),
     manageRow(CurrentRow),
+    write(CurrentRow),
     manageColumn(CurrentColumn),
+    write(CurrentColumn),
     get_move(Move),
-    validate_move(Move).
+    validate_move(Board, Move, CurrentRow, CurrentColumn).
     % write(CurrentRow),
     % write(CurrentColumn),
     % write(Move).
@@ -13,21 +15,60 @@ choose_move(Player) :-
 
 
 get_move(Move) :-
-    getChar(Char),
+    write('> Move:    (U,D,R,L)\n'),
+    read(Char),
     Move = Char,
     write(Move).
                 
 
-validate_move('U').
-validate_move('D').
-validate_move('R').
-validate_move('L').
-
-
-validate_move(_Move) :-
-    write('ERROR: That move is not valid!\n\n'),
+%  MOVES OUT OF BOUNDARIES
+validate_move(Board, 'U', 1, CurrentColumn):-
+    write('ERROR: That move is not valid! UP\n\n'),
     get_move(Move),
-    validate_move(Move).
+    validate_move(Board, Move, CurrentRow, CurrentColumn).
+
+validate_move(Board, 'D', 5, CurrentColumn):-
+    write('ERROR: That move is not valid! DOWN\n\n'),
+    get_move(Move),
+    validate_move(Board, Move, CurrentRow, CurrentColumn).
+
+validate_move(Board, 'R', CurrentRow, 5):-
+    write('ERROR: That move is not valid! RIGHT\n\n'),
+    get_move(Move),
+    validate_move(Board, Move, CurrentRow, CurrentColumn).
+
+validate_move(Board, 'L', CurrentRow, 1):-
+    write('ERROR: That move is not valid! LEFT\n\n'),
+    get_move(Move),
+    validate_move(Board, Move, CurrentRow, CurrentColumn).
+
+% MOVES OK
+
+validate_move(Board, 'U', CurrentRow, CurrentColumn):-
+    isEqual(CurrentRow, 1),
+    validate_move(Board, 'U', 1, CurrentColumn);
+    write('INPUT accepted UP\n').
+
+validate_move(Board, 'D', CurrentRow, CurrentColumn):-
+    isEqual(CurrentRow, 5),
+    validate_move(Board, 'D', 5, CurrentColumn);
+    write('INPUT accepted DOWN\n').
+
+validate_move(Board, 'R', CurrentRow, CurrentColumn):-
+    isEqual(CurrentColumn, 5),
+    validate_move(Board, 'R', CurrentRow, 5);
+    write('INPUT accepted RIGHT\n').
+
+validate_move(Board, 'L', CurrentRow, CurrentColumn):-
+    isEqual(CurrentColumn, 1),
+    validate_move(Board, 'L', CurrentRow, 1);
+    write('INPUT accepted LEFT\n').
+
+% DEFAULT
+validate_move(Board, Move, CurrentRow, CurrentColumn) :-
+    write('ERROR: That move is not valid! DEFAULT\n\n'),
+    get_move(Move),
+    validate_move(Board, Move, CurrentRow, CurrentColumn).
 
 
 
@@ -47,49 +88,48 @@ manageColumn(CurrentColumn) :-
     validateColumn(Column, CurrentColumn).
 
 readRow(Row) :-
-    write('> Row:   \n'),
+    write('> Row:   (1, 2, 3, 4)\n'),
     read(Row),
     write('\n').
 
 readColumn(Column) :-
-    write('> Column:    \n'),
-    getChar(Column),
+    write('> Column:    (A, B, C, D, E)\n'),
+    read(Column),
     write('\n').
 
 
 validateRow(1, CurrentRow) :-
-    CurrentRow = 0.
-
-validateRow(2, CurrentRow) :-
     CurrentRow = 1.
 
-validateRow(3, CurrentRow) :-
+validateRow(2, CurrentRow) :-
     CurrentRow = 2.
 
-validateRow(4, CurrentRow) :-
+validateRow(3, CurrentRow) :-
     CurrentRow = 3.
 
-validateRow(5, CurrentRow) :-
+validateRow(4, CurrentRow) :-
     CurrentRow = 4.
+
+validateRow(5, CurrentRow) :-
+    CurrentRow = 5.
 
 
 validateColumn('A', CurrentColumn) :-
-    CurrentColumn = 0.
-
-validateColumn('B', CurrentColumn) :-
     CurrentColumn = 1.
 
-validateColumn('C', CurrentColumn) :-
+validateColumn('B', CurrentColumn) :-
     CurrentColumn = 2.
 
-validateColumn('D', CurrentColumn) :-
+validateColumn('C', CurrentColumn) :-
     CurrentColumn = 3.
 
-validateColumn('E', CurrentColumn) :-
+validateColumn('D', CurrentColumn) :-
     CurrentColumn = 4.
 
+validateColumn('E', CurrentColumn) :-
+    CurrentColumn = 5.
+
 validateColumn(_Row, CurrentColumn) :-
-    write('ERROR: That row is not valid!\n\n'),
-    readColumn(Input),
-    validateColumn(Input, CurrentColumn).
+    write('ERROR: That column is not valid!\n\n'),
+    manageColumn(Column).
 

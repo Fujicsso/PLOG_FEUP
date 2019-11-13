@@ -9,5 +9,6 @@
 :- use_module(library(system)).
 
 :- dynamic state/3.
+:- dynamic not/1.
 
 play:- mainMenu.
