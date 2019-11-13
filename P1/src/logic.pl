@@ -1,4 +1,4 @@
-choose_move(Player, Board) :-
+choose_move(Board,Player) :-
     write('Choose the coords for the cell to move.\n'),
     manageRow(CurrentRow), write(CurrentRow),
     manageColumn(CurrentColumn), write(CurrentColumn),
