@@ -1,20 +1,81 @@
-choose_move(Board,Player) :-
+choose_move(Board, Player, BoardToReturn) :-
+    write('\n\nPlayer '), write(Player), write(' turn!\n'),
+    display_game(Board),
+    get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn),
+    %Cells and Move are valid
+    replaceInMatrix(Board, ValidatedRow, ValidatedColumn, empty, NewBoard),
+    replaceInMatrix(NewBoard, NewRow, NewColumn, Player, BoardToReturn).
+
+get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn) :-
     write('Choose the coords for the cell to move.\n'),
     manageRow(CurrentRow), write(CurrentRow),
     manageColumn(CurrentColumn), write(CurrentColumn),
+    piece_color(Board, Player, CurrentRow, CurrentColumn, ValidatedRow, ValidatedColumn),
     get_move(Move),
-    % validate_boundaries(Board, Move, CurrentRow, CurrentColumn),
+    validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn),
+    update_coords(Move, ValidatedRow, ValidatedColumn, NewRow, NewColumn),
+    empty_space(Board, Player, NewRow, NewColumn, FinalRow, FinalColumn).
 
-    MatrixRow = CurrentRow + 1,
-    MatrixColumn = CurrentColumn + 1,
-    getPiece(Board, MatrixRow, MatrixColumn, Elem),
-    write('Found element: '), write(Elem), write('\n\n').
-    % write(CurrentRow),
-    % write(CurrentColumn),
-    % write(Move).
-    % write('Player '), write(Player), write( ' choose a move [U,D,R,L]:'),
-    % get_move(Move),
-    % validate_move(Move).
+
+% Checks if the selected piece's color is correct, taking into account the Player
+piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
+    getValueFromMatrix(Board, Row, Column, Value),
+    Value == Player,
+    write('Correct cell selected\n'),
+    FinalRow is Row,
+    FinalColumn is Column.
+
+
+% If the selected piece is not the right color, asks for another piece to be selected
+piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
+    write('Selected cell does not contain a piece of the correct color.\n'),
+    write('Choose the coords for the cell to move.\n'),
+    manageRow(CurrentRow), write(CurrentRow),
+    manageColumn(CurrentColumn), write(CurrentColumn),
+    piece_color(Board, Player, CurrentRow, CurrentColumn, FinalRow, FinalColumn).
+    
+
+% Checks if the cell to be moved into is empty
+empty_space(Board, Player, Row, Column, FinalRow, FinalColumn) :-
+    getValueFromMatrix(Board, Row, Column, Value),
+    Value == empty,
+    write('Cell to move into is free!\n'),
+    FinalRow is Row,
+    FinalColumn is Column.
+
+
+
+
+update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
+    Move == 'U',
+    write('Move = U\n'),
+    NewRow is CurrentRow - 1,
+    NewColumn is CurrentColumn.
+
+update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
+    Move == 'D',
+    write('Move = D\n'),
+    NewRow is CurrentRow + 1,
+    NewColumn is CurrentColumn.
+
+update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
+    Move == 'L',
+    write('Move = L\n'),
+    NewColumn is CurrentColumn - 1,
+    NewRow is CurrentRow.
+
+update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
+    Move == 'R',
+    write('Move = R\n'),
+    NewColumn is CurrentColumn + 1,
+    NewRow is CurrentRow.
+
+update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
+    not(Move == 'R'),
+    not(Move == 'L'),
+    not(Move == 'U'),
+    not(Move == 'D'),
+    write('Move is not valid what\n'), write(Move), write('\n').
 
 
 get_move(MoveS) :-

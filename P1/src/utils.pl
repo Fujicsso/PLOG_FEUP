@@ -50,6 +50,21 @@ isNotEqual(A,B):-
 
 % Matrix manipulation
 
+replaceInList([_H|T], 0, Value, [Value|T]).
+replaceInList([H|T], Index, Value, [H|TNew]) :-
+        Index > 0,
+        Index1 is Index - 1,
+        replaceInList(T, Index1, Value, TNew).
+
+replaceInMatrix([H|T], 0, Column,Value, [HNew|T]) :-
+        replaceInList(H, Column, Value, HNew).
+
+replaceInMatrix([H|T], Row, Column, Value, [H|TNew]) :-
+        Row > 0,
+        Row1 is Row - 1,
+        replaceInMatrix(T, Row1, Column, Value, TNew).
+
+
 
 getValueFromList([H|_T], 0, Value) :-
     Value = H.
@@ -63,46 +78,56 @@ getValueFromMatrix([H|_T], 0, Column, Value) :-
     getValueFromList(H, Column, Value).
 
 getValueFromMatrix([_H|T], Row, Column, Value) :-
+    % write('Looking for values in '),
+    % write(Row),
+    % write(' x '),
+    % write(Column),
+    % write('\n'),
     Row > 0,
     Row1 is Row - 1,
     getValueFromMatrix(T, Row1, Column, Value).
+
+
+
+
+
 
 % getValueFromMatrix(_He, Row, Column, Value).
 
 % GET PIECE
 
-getPiece(Board, NLine, NColumn, Piece):-
-		getElemPos(NLine, Board, Line),
-		getElemPos(NColumn, Line, Piece).
+% getPiece(Board, NLine, NColumn, Piece):-
+% 		getElemPos(NLine, Board, Line),
+% 		getElemPos(NColumn, Line, Piece).
 
 
-% GET ELEMENT POSITION ON A LIST
+% % GET ELEMENT POSITION ON A LIST
 
-getElemPos(1,[Element|_], Element).
-getElemPos(Pos,[_|Tail], Element):-
-		Pos > 1,
-		Next is Pos-1,
-		getElemPos(Next, Tail, Element).
+% getElemPos(1,[Element|_], Element).
+% getElemPos(Pos,[_|Tail], Element):-
+% 		Pos > 1,
+% 		Next is Pos-1,
+% 		getElemPos(Next, Tail, Element).
 
-% SET PIECE
+% % SET PIECE
 
-setPiece(PrevBoard, NLine, NColumn, Piece, Board):-
-		setNLine(NLine, PrevBoard, NColumn, Piece, Board).
-
-
-% SET PIECE ON LINE
-
-setNLine(1, [Line|Tail], NColumn, Piece, [NewLine| Tail]):-
-		setNColumn(NColumn, Line, Piece, NewLine).
-setNLine(Pos, [Line|Tail], NColumn, Piece, [Line| NewTail]):-
-		Pos > 1, Next is Pos-1,
-		setNLine(Next, Tail, NColumn, Piece, NewTail).
+% setPiece(PrevBoard, NLine, NColumn, Piece, Board):-
+% 		setNLine(NLine, PrevBoard, NColumn, Piece, Board).
 
 
-% SET PIECE ON COLUMN
+% % SET PIECE ON LINE
 
-setNColumn(1, [_|Tail], Piece, [Piece| Tail]).
-setNColumn(Pos, [X|Tail], Piece, [X|NewTail]):-
-		Pos > 1,
-		Next is Pos-1,
-		setNColumn(Next, Tail, Piece, NewTail).
+% setNLine(1, [Line|Tail], NColumn, Piece, [NewLine| Tail]):-
+% 		setNColumn(NColumn, Line, Piece, NewLine).
+% setNLine(Pos, [Line|Tail], NColumn, Piece, [Line| NewTail]):-
+% 		Pos > 1, Next is Pos-1,
+% 		setNLine(Next, Tail, NColumn, Piece, NewTail).
+
+
+% % SET PIECE ON COLUMN
+
+% setNColumn(1, [_|Tail], Piece, [Piece| Tail]).
+% setNColumn(Pos, [X|Tail], Piece, [X|NewTail]):-
+% 		Pos > 1,
+% 		Next is Pos-1,
+% 		setNColumn(Next, Tail, Piece, NewTail).
