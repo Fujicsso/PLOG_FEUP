@@ -3,8 +3,11 @@ choose_move(Board,Player) :-
     manageRow(CurrentRow), write(CurrentRow),
     manageColumn(CurrentColumn), write(CurrentColumn),
     get_move(Move),
-    validate_boundaries(Board, Move, CurrentRow, CurrentColumn),
-    getValueFromMatrix(Board, CurrentRow, CurrentColumn, Elem),
+    % validate_boundaries(Board, Move, CurrentRow, CurrentColumn),
+
+    MatrixRow = CurrentRow + 1,
+    MatrixColumn = CurrentColumn + 1,
+    getPiece(Board, MatrixRow, MatrixColumn, Elem),
     write('Found element: '), write(Elem), write('\n\n').
     % write(CurrentRow),
     % write(CurrentColumn),
@@ -14,11 +17,11 @@ choose_move(Board,Player) :-
     % validate_move(Move).
 
 
-get_move(Move) :-
+get_move(MoveS) :-
     write('> Move:    (U,D,R,L)\n'),
     read(Char),
-    Move = Char,
-    write(Move).
+    MoveS = Char,
+    write(MoveS).
 
 
 %  MOVES OUT OF BOUNDARIES
@@ -46,8 +49,14 @@ validate_boundaries(Board, 'L', CurrentRow, 1):-
     get_move(M),
     validate_boundaries(Board, M, CurrentRow, 1).
 
-validate_boundaries(Board, _Move, CurrentRow, CurrentRow):-
-    write('\nACCEPTED MOVE\n\n').
+validate_boundaries(Board, _Move, CurrentRow, CurrentColumn):-
+    write('\nACCEPTED MOVE BOUNDARIES\n\n').
+
+% MOVES INTO OPOSITE PIECE
+check_empty(Board, NLine, NCol, NextBoard, Player, Computer):-
+	getPiece(Board, NLine, NCol, X),
+	X == empty, setPiece(Board, NLine, NCol, Player, NextBoard);
+    X \= empty, write('There is already a piece there! Try again!'), nl, check_empty(Board, NLine, NCol, NextBoard, Player, Computer).
 
 % DEFAULT
 % validate_move(Board, _Move, CurrentRow, CurrentColumn) :-
@@ -74,7 +83,7 @@ manageColumn(CurrentColumn) :-
     validateColumn(Column, CurrentColumn).
 
 readRow(Row) :-
-    write('> Row:   (1, 2, 3, 4)\n'),
+    write('> Row:   (1, 2, 3, 4, 5)\n'),
     read(Row),
     write('\n').
 
@@ -115,13 +124,13 @@ validateColumn('D', CurrentColumn) :-
 validateColumn('E', CurrentColumn) :-
     CurrentColumn = 5.
 
-validateColumn(_Row, CurrentColumn) :-
-    not(_Row=='A'),
-    not(_Row=='B'),
-    not(_Row=='C'),
-    not(_Row=='D'),
-    not(_Row=='E'),
+validateColumn(Row, CurrentColumn) :-
+    not(Row=='A'),
+    not(Row=='B'),
+    not(Row=='C'),
+    not(Row=='D'),
+    not(Row=='E'),
     write('ERROR: That column is not valid!\n\n'),
-    write(_Row), write('\n\n'),
+    write(Row), write('\n\n'),
     manageColumn(CurrentColumn).
 

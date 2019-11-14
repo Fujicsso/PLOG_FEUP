@@ -1,11 +1,11 @@
 
 
-startGameDisplay :-
+startGameDisplay:-
     lastBoard(Board),
     clearTheConsole,
     display_game(Board, Player).
 
-testGame :-
+testGame:-
     initialBoard(Board),
     displayGameName, display_game(Board, Player).
 
@@ -84,7 +84,7 @@ lastBoard(
 
 
 % ------------- PRINT GAME NAME ---------------
-displayGameName :-
+displayGameName:-
     nl,
     write('         / $$    $$                | $$                          '), nl,  
     write('         | $$$ | $$                | $$                          '), nl,
@@ -99,30 +99,30 @@ displayGameName :-
     write('                                          |____|                 '), nl, nl, nl, nl, nl, nl, nl.
 
 
-display_game(Board) :-
+display_game(Board):-
     printBoard(Board).
 
 
-printBoard(Board) :-
+printBoard(Board):-
     write('   '),
     printCoordLetters,
     write('   '),
     printMatrix(Board, 0).
 
 
-printCoordLetters :-
+printCoordLetters:-
     spacerTableTop, write('               A       B       C       D       E    '),
     nl.
 
-printHeader :-
+printHeader:-
     spacerTableTop, write('           -----------------------------------------'),
     nl.
 
-printEmpty :-
+printEmpty:-
     spacerTableTop, write('           |       |       |       |       |       |'),
     nl.
 
-printBlank :-
+printBlank:-
     spacerTableTop, write('                                                    '),
     nl.
 
@@ -133,7 +133,7 @@ printLineWithCell([]).
 printLineWithCellOut([]).
 
 %  ---------- PRINT LINE OF MATRIX with cells -------------
-printLineWithCell([Head|Tail], Ind) :-
+printLineWithCell([Head|Tail], Ind):-
     Ind = 7 -> (cell(Head, Char), write('   '), write(Char), write('   '), printLineWithCell(Tail));
     cell(Head, Char),
     write('   '), write(Char), write('   |'),
@@ -141,7 +141,7 @@ printLineWithCell([Head|Tail], Ind) :-
     printLineWithCell(Tail, NextInd).
 
 %  ---------- PRINT LINE OF MATRIX with no cells -------------
-printLineWithCellOut([Head|Tail]) :-
+printLineWithCellOut([Head|Tail]):-
     cell(Head, Char),
     write('   '), write(Char), write('    '),
     printLineWithCellOut(Tail).
@@ -151,7 +151,7 @@ printLineWithCellOut([Head|Tail]) :-
 %  ---------- PRINT MATRIX -------------
 printMatrix([], _).
 
-printMatrix([Head|Tail], Index) :-
+printMatrix([Head|Tail], Index):-
     Index = 0 -> ( write('   '), printBlank,
     printBlank, NextIndex is Index + 1, 
     write('       '), printLineWithCellOut(Head), nl, 
@@ -190,7 +190,7 @@ printgameModeMenu:-
 	spacerCenterBox, write('|   4. Back                     |'), nl,
 	spacerCenterBox, write('|                               |'), nl,
 	spacerCenterBox, write(' -------------------------------'), nl,
-	spacerCenterBox, write('Choose an option(without the dot):'), nl.
+	spacerCenterBox, write('Choose an option:'), nl.
 
 %------------MAIN MENU PRINT---------------
 
@@ -204,4 +204,5 @@ printMainMenu:-
 	spacerCenterBox, write('|   2. Exit                     |'), nl,
 	spacerCenterBox, write('|                               |'), nl,
 	spacerCenterBox, write(' -------------------------------'), nl,
-	spacerCenterBox, write('Choose an option(without the dot):'), nl.
+	spacerCenterBox, write('Choose an option:'), nl.
+    
