@@ -72,13 +72,13 @@ midBoard(
 
 lastBoard(
     [
-        [empty, empty, empty, empty, empty, empty, empty],
+        [black, empty, empty, white, empty, empty, white],
         [empty, empty, empty, empty, empty, empty, empty],
         [empty, empty, empty, empty, empty, empty, empty],
         [empty, empty, empty, empty, empty, empty, empty],
         [empty, empty, empty, empty, black, white, empty],
-        [empty, empty, black, empty, white, white, black],
-        [empty, empty, empty, empty, empty, empty, empty]
+        [empty, empty, black, empty, white, white, empty],
+        [white, black, empty, empty, empty, empty, black]
     ]
     ).
 
@@ -154,13 +154,14 @@ printMatrix([], _).
 printMatrix([Head|Tail], Index):-
     Index = 0 -> ( write('   '), printBlank,
     printBlank, NextIndex is Index + 1, 
-    write('       '), printLineWithCellOut(Head), nl, 
+    write('         '), printLineWithCellOut(Head), nl, 
     printBlank, write('   '), printHeader, 
     printMatrix(Tail, NextIndex));
 
-    Index = 6 -> ( write('   '), printBlank, 
-    printBlank, NextIndex is Index + 1, write('       '), 
+    Index = 6 -> ( write('   '), 
+    printBlank, NextIndex is Index + 1, write('         '), 
     printLineWithCellOut(Head), nl, write('   '), 
+    printBlank,
     printMatrix(Tail, NextIndex));
 
     write('   '),
@@ -205,4 +206,3 @@ printMainMenu:-
 	spacerCenterBox, write('|                               |'), nl,
 	spacerCenterBox, write(' -------------------------------'), nl,
 	spacerCenterBox, write('Choose an option:'), nl.
-    

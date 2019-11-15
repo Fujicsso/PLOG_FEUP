@@ -12,9 +12,34 @@ get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn) :-
     manageColumn(CurrentColumn), write(CurrentColumn),
     piece_color(Board, Player, CurrentRow, CurrentColumn, ValidatedRow, ValidatedColumn),
     get_move(Move),
-    validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn),
-    update_coords(Move, ValidatedRow, ValidatedColumn, NewRow, NewColumn),
-    empty_space(Board, Player, NewRow, NewColumn, FinalRow, FinalColumn).
+    validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn, NewMove),
+    validate_push(Board, Player, NewMove, ValidatedRow, ValidatedColumn, NewerMove),
+    % update_coords(NewMove, ValidatedRow, ValidatedColumn, UpdatedRow, UpdatedColumn),
+    % empty_space(Board, Player, UpdatedRow, UpdatedColumn, NewRow, NewColumn).
+
+
+%  MOVES INTO OPOSITE PIECE
+validate_push(Board, Player, NewMove, Row, Column, NewerMove):-
+    update_coords(NewMove, Row, Column, TestRow, TestColumn),
+    getValueFromMatrix(Board, TestRow, TestColumn, Value),
+    manageTypeMatrix(Value, Player, Board, NewMove, Row, Column, NewerMove).
+
+manageTypeMatrix(empty, Player, Board, NewMove, Row, Column, NewerMove):-
+    write('Cell to move into is free!\n').
+
+manageTypeMatrix(black, black, Board, NewMove, Row, Column, NewerMove):-
+    write('LINE SPOTTED\n').
+
+manageTypeMatrix(black, white, Board, NewMove, Row, Column, NewerMove):-
+    write('Cell to move into is occupied!\n').
+    
+
+manageTypeMatrix(white, white, Board, NewMove, Row, Column, NewerMove):-
+    write('LINE SPOTTED\n').
+
+manageTypeMatrix(white, black, Board, NewMove, Row, Column, NewerMove):-
+    write('Cell to move into is occupied!\n').
+
 
 
 % Checks if the selected piece's color is correct, taking into account the Player
@@ -86,32 +111,33 @@ get_move(MoveS) :-
 
 
 %  MOVES OUT OF BOUNDARIES
-validate_boundaries(Board, 'U', 1, CurrentColumn):-
+validate_boundaries(Board, 'U', 1, CurrentColumn, NewMove):-
     write('ERROR: That move is not valid! UP\n\n'),
     write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
     write('\n'),
     get_move(M),
-    validate_boundaries(Board, M, 1, CurrentColumn).
+    validate_boundaries(Board, M, 1, CurrentColumn, NewMove).
 
-validate_boundaries(Board, 'D', 5, CurrentColumn):-
+validate_boundaries(Board, 'D', 5, CurrentColumn, NewMove):-
     write('ERROR: That move is not valid! DOWN\n\n'),
     write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
     write('\n'),
     get_move(M),
-    validate_boundaries(Board, M, 5, CurrentColumn).
+    validate_boundaries(Board, M, 5, CurrentColumn, NewMove).
 
-validate_boundaries(Board, 'R', CurrentRow, 5):-
+validate_boundaries(Board, 'R', CurrentRow, 5, NewMove):-
     write('ERROR: That move is not valid! RIGHT\n\n'),
     get_move(M),
-    validate_boundaries(Board, M, CurrentRow, 5).
+    validate_boundaries(Board, M, CurrentRow, 5, NewMove).
 
-validate_boundaries(Board, 'L', CurrentRow, 1):-
+validate_boundaries(Board, 'L', CurrentRow, 1, NewMove):-
     write('ERROR: That move is not valid! LEFT\n\n'),
     get_move(M),
-    validate_boundaries(Board, M, CurrentRow, 1).
+    validate_boundaries(Board, M, CurrentRow, 1, NewMove).
 
-validate_boundaries(Board, _Move, CurrentRow, CurrentColumn):-
-    write('\nACCEPTED MOVE BOUNDARIES\n\n').
+validate_boundaries(Board, _Move, CurrentRow, CurrentColumn, NewMove):-
+    write('\nACCEPTED MOVE BOUNDARIES\n\n'),
+    NewMove = _Move.
 
 % MOVES INTO OPOSITE PIECE
 check_empty(Board, NLine, NCol, NextBoard, Player, Computer):-

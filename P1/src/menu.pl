@@ -37,7 +37,7 @@ manageInput(4).
 
 
 startGame('P', 'P') :-
-	initialBoard(Board),
+	lastBoard(Board),
 	gamePvP(Board, black, white).
 	
 %------------STARTS PLAYER VS PLAYER------------
