@@ -79,9 +79,16 @@ getValueFromMatrix([H|_T], 0, Column, Value) :-
     getValueFromList(H, Column, Value).
 
 getValueFromMatrix([_H|T], Row, Column, Value) :-
+    % write('Looking for values in '),
+    % write(Row),
+    % write(' x '),
+    % write(Column),
+    % write('\n'),
     Row > 0,
     Row1 is Row - 1,
     getValueFromMatrix(T, Row1, Column, Value).
+
+
 
 
 
@@ -92,6 +99,7 @@ check_game_over(Board, Winner) :-
 
 
 check_column([], Winner) :-
+    write('Test1 \n'),
     true.
 
 check_column([H|T], Winner) :-
@@ -108,46 +116,42 @@ check_vertical(List, Winner) :-
 check_vertical(List, Winner) :-
     nth0(0, List, black),
     write('GAME OVER\n'),
-    Winner = white,
+    Winner is 0,
     write('The Winner Is: '),
-    write(Winner),
+    write(white),
     write('\n'),
     write('Press Enter to Close Window\n'),
-    read(Enter),
-    halt(0).
+    true.
     
 check_vertical(List, Winner) :-
     nth0(0, List, white),
     write('GAME OVER\n'),
-    Winner = black,
+    Winner is 1,
     write('The Winner Is: '),
-    write(Winner),
+    write(black),
     write('\n'),
     write('Press Enter to Close Window\n'),
-    read(Enter),    
-    halt(0).  
+    true.
 
 check_vertical(List, Winner) :-
     nth0(6, List, black),
     write('GAME OVER\n'),
-    Winner = white,
+    Winner is 0,
     write('The Winner Is: '),
-    write(Winner),
+    write(white),
     write('\n'),
     write('Press Enter to Close Window\n'),
-    read(Enter),
-    halt(0).    
+    true.    
 
 check_vertical(List, Winner) :-
     nth0(6, List, white),
     write('GAME OVER\n'),
-    Winner = black,
+    Winner is 1,
     write('The Winner Is: '),
-    write(Winner),
+    write(black),
     write('\n'),
     write('Write "." and Enter to Close Window\n'),
-    read(Enter),
-    halt(0).   
+    true.   
 
 % First row
 check_row([H|T], Index, Winner) :-
@@ -161,25 +165,23 @@ check_row([H|T], Index, Winner) :-
 check_horizontal(List, Winner) :-
     member(white, List),
     write('Game Over!!!'),
-    Winner = black,
+    Winner is 1,
     write('The Winner Is: '),
-    write(Winner),
+    write(black),
     write('\n'),
     write('Press Enter to Close Window\n'),
-    read(Enter),   %TRUE IF GAME OVER
-    halt(0).   
+    true.
     
     % Black cell. Game Over!
 check_horizontal(List, Winner) :-
     member(black, List),   %TRUE IF GAME OVER
     write('Game Over!!!'),
-    Winner = white,
+    Winner is 0,
     write('The Winner Is: '),
-    write(Winner),
+    write(white),
     write('\n'),
     write('Press Enter to Close Window\n'),
-    read(Enter),   %TRUE IF GAME OVER
-    halt(0).   
+    true.
 
 % Black cell. Game Over!
 check_horizontal(List, Winner) :-
@@ -188,16 +190,140 @@ check_horizontal(List, Winner) :-
 
 get_last_row([H|T], Index, Row, Winner) :-
     Index < 6,
+    write(Index),
     NewIndex is Index + 1,
     get_last_row(T, NewIndex, Row, Winner).
 
 get_last_row([H|T], Index, Row, Winner) :-
     Index == 6,
+    write(Index),
     Row = H,
     check_horizontal(Row, Winner).
 
 
 get_last_row([], Index, Row, Winner).
+
+
+
+% %CHECKS IF GAME IS OVER
+% check_game_over(Board, Winner) :-
+%     write('Checking rows:\n'),
+%     check_row(Board, 0, Winner),
+%     write('Checking columns:\n'),
+%     check_column(Board, Winner),
+%     write('All checks good.').
+
+
+% check_column([], Winner) :-
+%     write('EMPTY COLUMN\n'),
+%     true.
+
+% check_column([H|T], Winner) :-
+%     check_vertical(H, Winner),
+%     check_column(T, Winner).
+
+% %TRUE IF GAMEOVER. Looks for black cell
+% check_vertical(List, Winner) :-
+%     \+ nth0(0, List, black),
+%     \+ nth0(0, List, white),
+%     \+ nth0(6, List, black),
+%     \+ nth0(6, List, white).
+
+% check_vertical(List, Winner) :-
+%     nth0(0, List, black),
+%     write('GAME OVER\n'),
+%     Winner = white,
+%     write('The Winner Is: '),
+%     write(Winner),
+%     write('\n'),
+%     write('Press Enter to Close Window\n'),
+%     read(Enter),
+%     halt(0).  
+    
+% check_vertical(List, Winner) :-
+%     nth0(0, List, white),
+%     write('GAME OVER\n'),
+%     Winner = black,
+%     write('The Winner Is: '),
+%     write(Winner),
+%     write('\n'),
+%     write('Press Enter to Close Window\n'),
+%     read(Enter),    
+%     halt(0).  
+
+% check_vertical(List, Winner) :-
+%     nth0(6, List, black),
+%     write('GAME OVER\n'),
+%     Winner = white,
+%     write('The Winner Is: '),
+%     write(Winner),
+%     write('\n'),
+%     write('Press Enter to Close Window\n'),
+%     read(Enter),
+%     halt(0).    
+
+% check_vertical(List, Winner) :-
+%     nth0(6, List, white),
+%     write('GAME OVER\n'),
+%     Winner = black,
+%     write('The Winner Is: '),
+%     write(Winner),
+%     write('\n'),
+%     write('Write "." and Enter to Close Window\n'),
+%     read(Enter),
+%     halt(0).   
+
+% % First row
+% check_row([H|T], Index, Winner) :-
+%     Index == 0,
+%     write(Index),
+%     check_horizontal(H, Winner),
+%     get_last_row([H|T], 0, Row, Winner).
+
+
+% % White cell. Game Over!
+% check_horizontal(List, Winner) :-
+%     member(white, List),
+%     write('Game Over!!!'),
+%     Winner = black,
+%     write('The Winner Is: '),
+%     write(Winner),
+%     write('\n'),
+%     write('Press Enter to Close Window\n'),
+%     read(Enter),   %TRUE IF GAME OVER
+%     halt(0).   
+    
+%     % Black cell. Game Over!
+% check_horizontal(List, Winner) :-
+%     member(black, List),   %TRUE IF GAME OVER
+%     write('Game Over!!!'),
+%     Winner = white,
+%     write('The Winner Is: '),
+%     write(Winner),
+%     write('\n'),
+%     write('Press Enter to Close Window\n'),
+%     read(Enter),   %TRUE IF GAME OVER
+%     halt(0).   
+
+% % Black cell. Game Over!
+% check_horizontal(List, Winner) :-
+%     \+ member(black, List),   %TRUE IF GAME OVER
+%     \+ member(white, List).
+
+% get_last_row([H|T], Index, Row, Winner) :-
+%     Index < 6,
+%     NewIndex is Index + 1,
+%     get_last_row(T, NewIndex, Row, Winner).
+
+% get_last_row([H|T], Index, Row, Winner) :-
+%     Index == 6,
+%     Row = H,
+%     check_horizontal(Row, Winner).
+
+
+% get_last_row([], Index, Row, Winner) :-
+%     write('LISTA VAZIA\n').
+
 
 
 
@@ -208,3 +334,43 @@ invertPlayer(white, InvertedPlayer):-
 invertPlayer(black, InvertedPlayer):-
     InvertedPlayer = white.
 
+
+% getValueFromMatrix(_He, Row, Column, Value).
+
+% GET PIECE
+
+% getPiece(Board, NLine, NColumn, Piece):-
+% 		getElemPos(NLine, Board, Line),
+% 		getElemPos(NColumn, Line, Piece).
+
+
+% % GET ELEMENT POSITION ON A LIST
+
+% getElemPos(1,[Element|_], Element).
+% getElemPos(Pos,[_|Tail], Element):-
+% 		Pos > 1,
+% 		Next is Pos-1,
+% 		getElemPos(Next, Tail, Element).
+
+% % SET PIECE
+
+% setPiece(PrevBoard, NLine, NColumn, Piece, Board):-
+% 		setNLine(NLine, PrevBoard, NColumn, Piece, Board).
+
+
+% % SET PIECE ON LINE
+
+% setNLine(1, [Line|Tail], NColumn, Piece, [NewLine| Tail]):-
+% 		setNColumn(NColumn, Line, Piece, NewLine).
+% setNLine(Pos, [Line|Tail], NColumn, Piece, [Line| NewTail]):-
+% 		Pos > 1, Next is Pos-1,
+% 		setNLine(Next, Tail, NColumn, Piece, NewTail).
+
+
+% % SET PIECE ON COLUMN
+
+% setNColumn(1, [_|Tail], Piece, [Piece| Tail]).
+% setNColumn(Pos, [X|Tail], Piece, [X|NewTail]):-
+% 		Pos > 1,
+% 		Next is Pos-1,
+% 		setNColumn(Next, Tail, Piece, NewTail).
