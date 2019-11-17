@@ -294,19 +294,15 @@ validate_boundaries(Board, 'L', CurrentRow, 1):-
 
 
 validate_boundaries_suicide(Board, 'U', 0, CurrentColumn):-
-    write('ERROR: That move is not valid! SUICIDE UP\n\n'),
     false.
 
 validate_boundaries_suicide(Board, 'D', 6, CurrentColumn):-
-    write('ERROR: That move is not valid! SUICIDE DOWN\n\n'),
     false.
 
 validate_boundaries_suicide(Board, 'R', CurrentRow, 6):-
-    write('ERROR: That move is not valid! SUICIDE RIGHT\n\n'),
     false.
 
 validate_boundaries_suicide(Board, 'L', CurrentRow, 0):-
-    write('ERROR: That move is not valid! SUICIDE LEFT\n\n'),
     false.
 
 

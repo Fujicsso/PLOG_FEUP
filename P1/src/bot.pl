@@ -3,25 +3,22 @@ gamePvC(Board, Player1, Player2) :-
 	game_loop(Board, Player1, Player2, 'P', 'C').
 
 
-gamePvC(Board, Player1, Player2) :-
+gameCvC(Board, Player1, Player2) :-
     write('Starting Game!\n'),
 	game_loop(Board, Player1, Player2, 'C', 'C').
 
 game_loop(Board, Player1, Player2, 'C', 'C') :-
     bot_move(Board, Player1, PlayerOneBoard_1, 1),
-    sleep(1),
     bot_move(PlayerOneBoard_1, Player1, PlayerOneBoard_2, 1),
-    sleep(1),
     bot_move(PlayerOneBoard_2, Player2, PlayerTwoBoard_1, 1),
-    sleep(1),
     bot_move(PlayerTwoBoard_1, Player2, PlayerTwoBoard_2, 1),
-    sleep(1),
     game_loop(PlayerTwoBoard_2, Player1, Player2, 'C', 'C').
 
 %easy bot
 bot_move(Board, Player, NewBoard, 1) :-
     write('\nPlayer '), write(Player), write(' Turn!\n'),
     display_game(Board),
+    sleep(1),
     check_game_over(Board, Winner),
     repeat,
     get_valid_plays(Board, Player, Plays, R, C),
@@ -31,15 +28,15 @@ bot_move(Board, Player, NewBoard, 1) :-
 
 
 %hard bot
-bot_move(Board, Player, NewBoard, 2) :-
-    display_game(Board),
-    repeat,
-    get_valid_plays(Board, Player, Plays, R, C).
+% bot_move(Board, Player, NewBoard, 2) :-
+%     display_game(Board),
+%     repeat,
+%     get_valid_plays(Board, Player, Plays, R, C).
 
-check_end_game(Board, [], R, C).
+% check_end_game(Board, [], R, C).
 
-check_end_game(Board, [H|T], R, C) :-
-    checkmate(Board, H, R, C).
+% check_end_game(Board, [H|T], R, C) :-
+%     checkmate(Board, H, R, C).
 
 
 % checkmate(Board, H, R, C) :-
@@ -87,8 +84,8 @@ validate_play(Board, Move, Player, ValidatedRow, ValidatedColumn, NewMove, Newer
 
 
 getValidCoords(Board, R, C, Player):-
-    random(0,5,Row),
-    random(0,5,Col),
+    random(1,7,Row),
+    random(1,7,Col),
     getValueFromMatrix(Board, Row, Col, Val),
     R is Row,
     C is Col,
@@ -96,8 +93,8 @@ getValidCoords(Board, R, C, Player):-
 
 
 getValidCoords(Board, R, C, Player):-
-    random(0,5,Row),
-    random(0,5,Col),
+    random(1,7,Row),
+    random(1,7,Col),
     getValueFromMatrix(Board, Row, Col, Val),
     not(Val == Player),
     getValidCoords(Board, R, C, Player).
