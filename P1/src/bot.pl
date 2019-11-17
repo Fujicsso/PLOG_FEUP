@@ -14,6 +14,12 @@ game_loop(Board, Player1, Player2, 'C', 'C') :-
     bot_move(PlayerTwoBoard_1, Player2, PlayerTwoBoard_2, 1),
     game_loop(PlayerTwoBoard_2, Player1, Player2, 'C', 'C').
 
+game_loop(Board, Player1, Player2, 'P', 'C') :-
+    choose_move(Board, Player1, PlayerOneBoard, 'P'),
+    bot_move(PlayerOneBoard, Player2, PlayerTwoBoard_1, 1),
+    bot_move(PlayerTwoBoard_1, Player2, PlayerTwoBoard_2, 1),
+    game_loop(PlayerTwoBoard_2, Player1, Player2, 'P', 'C').
+
 %easy bot
 bot_move(Board, Player, NewBoard, 1) :-
     write('\nPlayer '), write(Player), write(' Turn!\n'),
