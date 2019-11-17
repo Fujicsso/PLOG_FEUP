@@ -1,22 +1,46 @@
 choose_move(Board, Player, FinalBoard, 'P') :-
     write('\n\nPlayer '), write(Player), write(' turn!\n'),
     display_game(Board),
-    get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard),
-    %Cells and Move are valid
+    get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard1, Board),
+    display_game(FinalBoard1),
+    get_play(FinalBoard1, Player, ValidatedRow2, ValidatedColumn2, NewRow2, NewColumn2, FinalBoard, Board),
     write('SAIUUUU\n').
 
-get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard) :-
+get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard, PreviousBoard) :-
+    check_game_over(Board, Winner),
     write('Choose the coords for the cell to move.\n'),
     repeat,
     manageRow(CurrentRow), write(CurrentRow),
     manageColumn(CurrentColumn), write(CurrentColumn),
     piece_color(Board, Player, CurrentRow, CurrentColumn, ValidatedRow, ValidatedColumn),
     get_move(Move),
-    validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn, NewMove),
+    validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn),
     write('Validated Boundaries\n'),
-    validate_push(Board, Player, NewMove, ValidatedRow, ValidatedColumn, NewerMove, FinalBoard),
-
+    validate_push(Board, Player, Move, ValidatedRow, ValidatedColumn, NewerMove, FinalBoard),
+    checkNullMove(FinalBoard, PreviousBoard).
     % update_coords(NewMove, ValidatedRow, ValidatedColumn, UpdatedRow, UpdatedColumn).
+
+
+% CHECK NULL PLAY
+
+
+
+checkNullMove(Board1, Board2):-
+    Board1 == Board2,
+    write('This play will make your 2 plays null, chose another move\n'),
+    fail.
+
+checkNullMove(Board1, Board2):-
+    Board1 \= Board2,
+    write('BOARD IS DIFFERENT\n').
+    % write(Board1),
+    % write('\n'),
+    % write(Board2),
+    % write('\n').
+
+% checkNullMove(Board1, Board2):-
+%     write('BOARD2 IS NULL\n'),
+%     write(Board2).
 
 
 %  MOVES INTO OPOSITE PIECE
@@ -31,7 +55,6 @@ validate_push(Board, Player, NewMove, Row, Column, NewerMove, FinalBoard):-
 
 manageTypeMatrix(empty, Player, Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
     write('Cell to move into is free!\n'),
-    
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
     replaceInMatrix(NewBoard, Row, Column, Player, FinalBoard).
 
@@ -86,6 +109,7 @@ check_next_pos_anti_line(Board, Player, Move, Row, Column, Counter, FinalCounter
 manageCounterLine(Board, Player, empty, Move, Row, Column, Counter, FinalCounter, Collision):-
     write('Next Slot is Empty\n'),
     FinalCounter is Counter,
+    validate_boundaries_suicide(Board, Move, Row, Column),
     manageCollision(Counter, 0, Collision),
     write(FinalCounter), write(' \n').
 
@@ -323,7 +347,7 @@ get_move(MoveS) :-
 
 
 %  MOVES OUT OF BOUNDARIES
-validate_boundaries(Board, 'U', 1, CurrentColumn, NewMove):-
+validate_boundaries(Board, 'U', 1, CurrentColumn):-
     write('ERROR: That move is not valid! UP\n\n'),
     % write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
     % write('\n'),
@@ -331,7 +355,7 @@ validate_boundaries(Board, 'U', 1, CurrentColumn, NewMove):-
     % validate_boundaries(Board, M, 1, CurrentColumn, NewMove).
     false.
 
-validate_boundaries(Board, 'D', 5, CurrentColumn, NewMove):-
+validate_boundaries(Board, 'D', 5, CurrentColumn):-
     write('ERROR: That move is not valid! DOWN\n\n'),
     % write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
     % write('\n'),
@@ -339,13 +363,13 @@ validate_boundaries(Board, 'D', 5, CurrentColumn, NewMove):-
     % validate_boundaries(Board, M, 5, CurrentColumn, NewMove).
     false.
 
-validate_boundaries(Board, 'R', CurrentRow, 5, NewMove):-
+validate_boundaries(Board, 'R', CurrentRow, 5):-
     write('ERROR: That move is not valid! RIGHT\n\n'),
     % get_move(M),
     % validate_boundaries(Board, M, CurrentRow, 5, NewMove).
     false.
 
-validate_boundaries(Board, 'L', CurrentRow, 1, NewMove):-
+validate_boundaries(Board, 'L', CurrentRow, 1):-
     write('ERROR: That move is not valid! LEFT\n\n'),
     % get_move(M),
     % validate_boundaries(Board, M, CurrentRow, 1, NewMove).
@@ -353,26 +377,68 @@ validate_boundaries(Board, 'L', CurrentRow, 1, NewMove):-
 
 
 
-validate_boundaries(Board, 'U', CurrentRow, CurrentColumn, NewMove):-
+validate_boundaries_suicide(Board, 'U', 0, CurrentColumn):-
+    write('ERROR: That move is not valid! SUICIDE UP\n\n'),
+    % write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
+    % write('\n'),
+    % get_move(M),
+    % validate_boundaries(Board, M, 1, CurrentColumn, NewMove).
+    false.
+
+validate_boundaries_suicide(Board, 'D', 6, CurrentColumn):-
+    write('ERROR: That move is not valid! SUICIDE DOWN\n\n'),
+    % write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
+    % write('\n'),
+    % get_move(M),
+    % validate_boundaries(Board, M, 5, CurrentColumn, NewMove).
+    false.
+
+validate_boundaries_suicide(Board, 'R', CurrentRow, 6):-
+    write('ERROR: That move is not valid! SUICIDE RIGHT\n\n'),
+    % get_move(M),
+    % validate_boundaries(Board, M, CurrentRow, 5, NewMove).
+    false.
+
+validate_boundaries_suicide(Board, 'L', CurrentRow, 0):-
+    write('ERROR: That move is not valid! SUICIDE LEFT\n\n'),
+    % get_move(M),
+    % validate_boundaries(Board, M, CurrentRow, 1, NewMove).
+    false.
+
+
+validate_boundaries(Board, 'U', CurrentRow, CurrentColumn):-
     CurrentRow > 1,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n'),
-    NewMove = 'U'.
+    write('\nACCEPTED MOVE BOUNDARIES\n\n').
 
-validate_boundaries(Board, 'D', CurrentRow, CurrentColumn, NewMove):-
+validate_boundaries(Board, 'D', CurrentRow, CurrentColumn):-
     CurrentRow < 5,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n'),
-    NewMove = 'D'.
+    write('\nACCEPTED MOVE BOUNDARIES\n\n').
 
-validate_boundaries(Board, 'R', CurrentRow, CurrentColumn, NewMove):-
+validate_boundaries(Board, 'R', CurrentRow, CurrentColumn):-
     CurrentColumn < 5,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n'),
-    NewMove = 'R'.
+    write('\nACCEPTED MOVE BOUNDARIES\n\n').
 
-validate_boundaries(Board, 'L', CurrentRow, CurrentColumn, NewMove):-
+validate_boundaries(Board, 'L', CurrentRow, CurrentColumn):-
     CurrentColumn > 1,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n'),
-    NewMove = 'L'.
+    write('\nACCEPTED MOVE BOUNDARIES\n\n').
 
+
+
+validate_boundaries_suicide(Board, 'U', CurrentRow, CurrentColumn):-
+    CurrentRow > 0,
+    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+
+validate_boundaries_suicide(Board, 'D', CurrentRow, CurrentColumn):-
+    CurrentRow < 6,
+    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+
+validate_boundaries_suicide(Board, 'R', CurrentRow, CurrentColumn):-
+    CurrentColumn < 6,
+    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+
+validate_boundaries_suicide(Board, 'L', CurrentRow, CurrentColumn):-
+    CurrentColumn > 0,
+    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
 % MOVES INTO OPOSITE PIECE
 check_empty(Board, NLine, NCol, NextBoard, Player, Computer):-
 	getPiece(Board, NLine, NCol, X),

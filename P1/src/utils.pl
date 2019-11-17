@@ -66,6 +66,7 @@ replaceInMatrix([H|T], Row, Column, Value, [H|TNew]) :-
 
 
 
+
 getValueFromList([H|_T], 0, Value) :-
     Value = H.
 
@@ -86,6 +87,128 @@ getValueFromMatrix([_H|T], Row, Column, Value) :-
     Row > 0,
     Row1 is Row - 1,
     getValueFromMatrix(T, Row1, Column, Value).
+
+
+
+%CHECKS IF GAME IS OVER
+check_game_over(Board, Winner) :-
+    write('Checking rows:\n'),
+    check_row(Board, 0, Winner),
+    write('Checking columns:\n'),
+    check_column(Board, Winner),
+    write('All checks good.').
+
+
+check_column([], Winner) :-
+    write('EMPTY COLUMN\n'),
+    true.
+
+check_column([H|T], Winner) :-
+    check_vertical(H, Winner),
+    check_column(T, Winner).
+
+%TRUE IF GAMEOVER. Looks for black cell
+check_vertical(List, Winner) :-
+    \+ nth0(0, List, black),
+    \+ nth0(0, List, white),
+    \+ nth0(6, List, black),
+    \+ nth0(6, List, white).
+
+check_vertical(List, Winner) :-
+    nth0(0, List, black),
+    write('GAME OVER\n'),
+    Winner = white,
+    write('The Winner Is: '),
+    write(Winner),
+    write('\n'),
+    write('Press Enter to Close Window\n'),
+    read(Enter),
+    halt(0).  
+    
+check_vertical(List, Winner) :-
+    nth0(0, List, white),
+    write('GAME OVER\n'),
+    Winner = black,
+    write('The Winner Is: '),
+    write(Winner),
+    write('\n'),
+    write('Press Enter to Close Window\n'),
+    read(Enter),    
+    halt(0).  
+
+check_vertical(List, Winner) :-
+    nth0(6, List, black),
+    write('GAME OVER\n'),
+    Winner = white,
+    write('The Winner Is: '),
+    write(Winner),
+    write('\n'),
+    write('Press Enter to Close Window\n'),
+    read(Enter),
+    halt(0).    
+
+check_vertical(List, Winner) :-
+    nth0(6, List, white),
+    write('GAME OVER\n'),
+    Winner = black,
+    write('The Winner Is: '),
+    write(Winner),
+    write('\n'),
+    write('Write "." and Enter to Close Window\n'),
+    read(Enter),
+    halt(0).   
+
+% First row
+check_row([H|T], Index, Winner) :-
+    Index == 0,
+    write(Index),
+    check_horizontal(H, Winner),
+    get_last_row([H|T], 0, Row, Winner).
+
+
+% White cell. Game Over!
+check_horizontal(List, Winner) :-
+    member(white, List),
+    write('Game Over!!!'),
+    Winner = black,
+    write('The Winner Is: '),
+    write(Winner),
+    write('\n'),
+    write('Press Enter to Close Window\n'),
+    read(Enter),   %TRUE IF GAME OVER
+    halt(0).   
+    
+    % Black cell. Game Over!
+check_horizontal(List, Winner) :-
+    member(black, List),   %TRUE IF GAME OVER
+    write('Game Over!!!'),
+    Winner = white,
+    write('The Winner Is: '),
+    write(Winner),
+    write('\n'),
+    write('Press Enter to Close Window\n'),
+    read(Enter),   %TRUE IF GAME OVER
+    halt(0).   
+
+% Black cell. Game Over!
+check_horizontal(List, Winner) :-
+    \+ member(black, List),   %TRUE IF GAME OVER
+    \+ member(white, List).
+
+get_last_row([H|T], Index, Row, Winner) :-
+    Index < 6,
+    NewIndex is Index + 1,
+    get_last_row(T, NewIndex, Row, Winner).
+
+get_last_row([H|T], Index, Row, Winner) :-
+    Index == 6,
+    Row = H,
+    check_horizontal(Row, Winner).
+
+
+get_last_row([], Index, Row, Winner) :-
+    write('LISTA VAZIA\n').
+
 
 
 

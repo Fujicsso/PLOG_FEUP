@@ -49,11 +49,9 @@ gamePvP(Board, Player1, Player2) :-
 
 
 game_loop(Board, Player1, Player2) :-
-	choose_move(Board, Player1, PlayerOneBoard_1, 'P'),	%black
-	choose_move(PlayerOneBoard_1, Player1, PlayerOneBoard_2, 'P'),	%black
-	choose_move(PlayerOneBoard_2, Player2, PlayerTwoBoard_1, 'P'),	%white
-	choose_move(PlayerTwoBoard_1, Player2, PlayerTwoBoard_2, 'P'),	%white
-	game_loop(PlayerTwoBoard_2, Player1, Player2).
+	choose_move(Board, Player1, PlayerOneBoard, 'P'),	%black
+	choose_move(PlayerOneBoard, Player2, PlayerTwoBoard, 'P'),	%white
+	game_loop(PlayerTwoBoard, Player1, Player2).
 
 
 
