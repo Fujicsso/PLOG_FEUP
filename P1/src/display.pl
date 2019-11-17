@@ -82,6 +82,18 @@ lastBoard(
     ]
     ).
 
+testBoard(
+    [
+        [empty, empty, empty, empty, empty, empty, empty],
+        [empty, white, empty, empty, empty, black, empty],
+        [empty, white, black, black, white, black, empty],
+        [empty, black, black, black, white, white, empty],
+        [empty, black, black, black, white, white, empty],
+        [empty, empty, empty, empty, empty, white, empty],
+        [empty, empty, empty, empty, empty, empty, empty]
+    ]
+    ).
+
 
 % ------------- PRINT GAME NAME ---------------
 displayGameName:-

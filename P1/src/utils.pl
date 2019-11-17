@@ -89,7 +89,12 @@ getValueFromMatrix([_H|T], Row, Column, Value) :-
 
 
 
+% INVERT PLAYERS
+invertPlayer(white, InvertedPlayer):-
+    InvertedPlayer = black.
 
+invertPlayer(black, InvertedPlayer):-
+    InvertedPlayer = white.
 
 
 % getValueFromMatrix(_He, Row, Column, Value).
