@@ -3,22 +3,18 @@ choose_move(Board, Player, FinalBoard, 'P') :-
     display_game(Board),
     get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard1, Board),
     display_game(FinalBoard1),
-    get_play(FinalBoard1, Player, ValidatedRow2, ValidatedColumn2, NewRow2, NewColumn2, FinalBoard, Board),
-    write('SAIUUUU\n').
+    get_play(FinalBoard1, Player, ValidatedRow2, ValidatedColumn2, NewRow2, NewColumn2, FinalBoard, Board).
 
 get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard, PreviousBoard) :-
     check_game_over(Board, Winner),
-    write(Winner),
-    Winner /= 1,
-    Winner /= 0,
-    write('Choose the coords for the cell to move.\n'),
+    Winner \= 1,
+    Winner \= 0,
     repeat,
-    manageRow(CurrentRow), write(CurrentRow),
-    manageColumn(CurrentColumn), write(CurrentColumn),
+    manageRow(CurrentRow),
+    manageColumn(CurrentColumn),
     piece_color(Board, Player, CurrentRow, CurrentColumn, ValidatedRow, ValidatedColumn),
     get_move(Move),
     validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn),
-    write('Validated Boundaries\n'),
     validate_push(Board, Player, Move, ValidatedRow, ValidatedColumn, NewerMove, FinalBoard),
     checkNullMove(FinalBoard, PreviousBoard),
     !.
@@ -35,36 +31,23 @@ checkNullMove(Board1, Board2):-
     fail.
 
 checkNullMove(Board1, Board2):-
-    Board1 \= Board2,
-    write('BOARD IS DIFFERENT\n').
-    % write(Board1),
-    % write('\n'),
-    % write(Board2),
-    % write('\n').
+    Board1 \= Board2.
 
-% checkNullMove(Board1, Board2):-
-%     write('BOARD2 IS NULL\n'),
-%     write(Board2).
 
 
 %  MOVES INTO OPOSITE PIECE
 validate_push(Board, Player, NewMove, Row, Column, NewerMove, FinalBoard):-
-    write('Entered Validate Push\n'),
     update_coords(NewMove, Row, Column, TestRow, TestColumn),
-    write('updated coords\n'),
     getValueFromMatrix(Board, TestRow, TestColumn, Value),
-    write('Value From Matrix Gotten\n'),
     manageTypeMatrix(Value, Player, Board, NewMove, Row, Column, TestRow, TestColumn, FinalBoard).
 
 
 manageTypeMatrix(empty, Player, Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
-    write('Cell to move into is free!\n'),
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
     replaceInMatrix(NewBoard, Row, Column, Player, FinalBoard).
 
 
 manageTypeMatrix(black, black,  Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
-    write('LINE SPOTTED\n'),
     Counter = 2,
     check_next_pos_line(Board, black, NewMove, Row, Column, Counter, FinalCounter, Collision),
     notifyCounter(FinalCounter),
@@ -78,7 +61,6 @@ manageTypeMatrix(black, white,  Board, NewMove, OldRow, OldColumn, Row, Column, 
     
 
 manageTypeMatrix(white, white,  Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
-    write('LINE SPOTTED\n'),
     Counter = 2,
     check_next_pos_line(Board, white, NewMove, Row, Column, Counter, FinalCounter, Collision),
     notifyCounter(FinalCounter),
@@ -92,30 +74,22 @@ manageTypeMatrix(white, black,  Board, NewMove, OldRow, OldColumn, Row, Column, 
 
 % CHECKS NEXT POSITION FOR A LINE
 check_next_pos_line(Board, Player, Move, Row, Column, Counter, FinalCounter, Collision):-
-    write('Entered CheckPosLine\n'),
     update_coords(Move, Row, Column, TestRow, TestColumn),
-    write('updated coords\n'),
     getValueFromMatrix(Board, TestRow, TestColumn, Value),
-    write('Value From Matrix Gotten\n'),
     manageCounterLine(Board, Player, Value, Move, TestRow, TestColumn, Counter, FinalCounter, Collision).
 
 % CHECKS NEXT POSITION FOR AN ANTI-LINE
 check_next_pos_anti_line(Board, Player, Move, Row, Column, Counter, FinalCounter):-
-    write('Entered CheckPosAntiLine\n'),
     update_coords(Move, Row, Column, TestRow, TestColumn),
-    write('updated coords\n'),
     getValueFromMatrix(Board, TestRow, TestColumn, Value),
-    write('Value From Matrix Gotten\n'),
     manageCounterAntiLine(Board, Player, Value, Move, TestRow, TestColumn, Counter, FinalCounter).
 
 % LINE COUNTER MANAGER
 
 manageCounterLine(Board, Player, empty, Move, Row, Column, Counter, FinalCounter, Collision):-
-    write('Next Slot is Empty\n'),
     FinalCounter is Counter,
     validate_boundaries_suicide(Board, Move, Row, Column),
-    manageCollision(Counter, 0, Collision),
-    write(FinalCounter), write(' \n').
+    manageCollision(Counter, 0, Collision).
 
 manageCounterLine(Board, black, black, Move, Row, Column, Counter, FinalCounter, Collision):-
     NewCounter is Counter + 1,
@@ -139,14 +113,11 @@ manageCounterLine(Board, white, black, Move, Row, Column, Counter, FinalCounter,
 % ANTI-LINE COUNTER MANAGER
 
 manageCounterAntiLine(Board, Player, empty, Move, Row, Column, Counter, FinalCounter):-
-    write('Next Slot is Empty\n'),
-    FinalCounter is Counter,
-    write(FinalCounter), write(' \n').
+    FinalCounter is Counter.
 
 manageCounterAntiLine(Board, black, black, Move, Row, Column, Counter, FinalCounter):-
     write('There is another piece of yours on the other side. Try another move.\n'),
     FinalCounter is Counter,
-    write(FinalCounter), write(' \n'),
     fail.
 
 manageCounterAntiLine(Board, white, white, Move, Row, Column, Counter, FinalCounter):-
@@ -178,99 +149,69 @@ notifyCounter(Counter):-
 
 % COLLISION HANDLER
 manageCollision(3, 1, Collision):-
-    write('Collision is 2'),
-    write(' \n'),
     Collision = 2.
 
 manageCollision(Counter, 1, Collision):-
-    write('Collision is 1'),
-    write(' \n'),
     Collision = 1.
 
 manageCollision(Counter, One, Collision):-
-    write('Collision is 0'),
-    write(' \n'),
     Collision = 0.
 
 
 % REPLACE LINES IN MATRIX
 replaceLineInMatrix(Board, Move, OldRow, OldColumn, Player, 1, FinalBoard, 1):-
-    write('2v1 \n'),
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
-    write('1 empty \n'),
     update_coords(Move, OldRow, OldColumn, TestRow1, TestColumn1),
     replaceInMatrix(NewBoard, TestRow1, TestColumn1, Player, TestBoard1),
-    write('1 Player1 \n'),
     update_coords(Move, TestRow1, TestColumn1, TestRow2, TestColumn2),
     replaceInMatrix(TestBoard1, TestRow2, TestColumn2, Player, TestBoard2),
-    write('2 Player1 \n'),
     invertPlayer(Player, InvertedPlayer),
     update_coords(Move, TestRow2, TestColumn2, TestRow3, TestColumn3),
-    replaceInMatrix(TestBoard2, TestRow3, TestColumn3, InvertedPlayer, FinalBoard),
-    write('1 Player2 \n').
+    replaceInMatrix(TestBoard2, TestRow3, TestColumn3, InvertedPlayer, FinalBoard).
 
 
 replaceLineInMatrix(Board, Move, OldRow, OldColumn, Player, 1, FinalBoard, 2):-
-    write('3v2 \n'),
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
-    write('1 empty \n'),
     update_coords(Move, OldRow, OldColumn, TestRow1, TestColumn1),
     replaceInMatrix(NewBoard, TestRow1, TestColumn1, Player, TestBoard1),
-    write('1 Player1 \n'),
     update_coords(Move, TestRow1, TestColumn1, TestRow2, TestColumn2),
     replaceInMatrix(TestBoard1, TestRow2, TestColumn2, Player, TestBoard2),
-    write('2 Player1 \n'),
     update_coords(Move, TestRow2, TestColumn2, TestRow3, TestColumn3),
     replaceInMatrix(TestBoard2, TestRow3, TestColumn3, Player, TestBoard3),
-    write('3 Player1 \n'),
     invertPlayer(Player, InvertedPlayer),
     update_coords(Move, TestRow3, TestColumn3, TestRow4, TestColumn4),
     replaceInMatrix(TestBoard3, TestRow4, TestColumn4, InvertedPlayer, TestBoard4),
-    write('1 Player2 \n'),
     update_coords(Move, TestRow4, TestColumn4, TestRow5, TestColumn5),
-    replaceInMatrix(TestBoard4, TestRow5, TestColumn5, InvertedPlayer, FinalBoard),
-    write('2 Player2 \n').
+    replaceInMatrix(TestBoard4, TestRow5, TestColumn5, InvertedPlayer, FinalBoard).
 
 
 replaceLineInMatrix(Board, Move, OldRow, OldColumn, Player, 2, FinalBoard, 2):-
-    write('3v1 \n'),
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
-
     update_coords(Move, OldRow, OldColumn, TestRow1, TestColumn1),
     replaceInMatrix(NewBoard, TestRow1, TestColumn1, Player, TestBoard1),
-
     update_coords(Move, TestRow1, TestColumn1, TestRow2, TestColumn2),
     replaceInMatrix(TestBoard1, TestRow2, TestColumn2, Player, TestBoard2),
-
     update_coords(Move, TestRow2, TestColumn2, TestRow3, TestColumn3),
     replaceInMatrix(TestBoard2, TestRow3, TestColumn3, Player, TestBoard3),
-
     invertPlayer(Player, InvertedPlayer),
     update_coords(Move, TestRow3, TestColumn3, TestRow4, TestColumn4),
     replaceInMatrix(TestBoard3, TestRow4, TestColumn4, InvertedPlayer, FinalBoard).
 
 
 replaceLineInMatrix(Board, Move, OldRow, OldColumn, Player, 2, FinalBoard, 0):-
-    write('2v0 \n'),
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
-
     update_coords(Move, OldRow, OldColumn, TestRow1, TestColumn1),
     replaceInMatrix(NewBoard, TestRow1, TestColumn1, Player, TestBoard1),
-
     update_coords(Move, TestRow1, TestColumn1, TestRow2, TestColumn2),
     replaceInMatrix(TestBoard1, TestRow2, TestColumn2, Player, FinalBoard).
 
 
 replaceLineInMatrix(Board, Move, OldRow, OldColumn, Player, 3, FinalBoard, 0):-
-    write('3v0 \n'),
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
-
     update_coords(Move, OldRow, OldColumn, TestRow1, TestColumn1),
     replaceInMatrix(NewBoard, TestRow1, TestColumn1, Player, TestBoard1),
-
     update_coords(Move, TestRow1, TestColumn1, TestRow2, TestColumn2),
     replaceInMatrix(TestBoard1, TestRow2, TestColumn2, Player, TestBoard2),
-
     update_coords(Move, TestRow2, TestColumn2, TestRow3, TestColumn3),
     replaceInMatrix(TestBoard2, TestRow3, TestColumn3, Player, FinalBoard).
 
@@ -291,7 +232,7 @@ piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
 piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
     % write(Row), write(Column),
     getValueFromMatrix(Board, Row, Column, Value),
-    not(Player == Value),
+    Value \= Player,
     write('Selected cell does not contain a piece of the correct color.\n'),
     write('Choose the coords for the cell to move.\n'),
     false.
@@ -304,7 +245,6 @@ piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
 empty_space(Board, Player, Row, Column, FinalRow, FinalColumn) :-
     getValueFromMatrix(Board, Row, Column, Value),
     Value == empty,
-    write('Cell to move into is free!\n'),
     FinalRow is Row,
     FinalColumn is Column.
 
@@ -313,25 +253,21 @@ empty_space(Board, Player, Row, Column, FinalRow, FinalColumn) :-
 
 update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
     Move == 'U',
-    write('Move = U\n'),
     NewRow is CurrentRow - 1,
     NewColumn is CurrentColumn.
 
 update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
     Move == 'D',
-    write('Move = D\n'),
     NewRow is CurrentRow + 1,
     NewColumn is CurrentColumn.
 
 update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
     Move == 'L',
-    write('Move = L\n'),
     NewColumn is CurrentColumn - 1,
     NewRow is CurrentRow.
 
 update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
     Move == 'R',
-    write('Move = R\n'),
     NewColumn is CurrentColumn + 1,
     NewRow is CurrentRow.
 
@@ -340,7 +276,7 @@ update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
     not(Move == 'L'),
     not(Move == 'U'),
     not(Move == 'D'),
-    write('Move is not valid what\n'), write(Move), write('\n').
+    write('Move is not valid\n'), write(Move), write('\n').
 
 
 get_move(MoveS) :-
@@ -411,38 +347,30 @@ validate_boundaries_suicide(Board, 'L', CurrentRow, 0):-
 
 
 validate_boundaries(Board, 'U', CurrentRow, CurrentColumn):-
-    CurrentRow > 1,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n').
+    CurrentRow > 1.
 
 validate_boundaries(Board, 'D', CurrentRow, CurrentColumn):-
-    CurrentRow < 5,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n').
+    CurrentRow < 5.
 
 validate_boundaries(Board, 'R', CurrentRow, CurrentColumn):-
-    CurrentColumn < 5,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n').
+    CurrentColumn < 5.
 
 validate_boundaries(Board, 'L', CurrentRow, CurrentColumn):-
-    CurrentColumn > 1,
-    write('\nACCEPTED MOVE BOUNDARIES\n\n').
+    CurrentColumn > 1.
 
 
 
 validate_boundaries_suicide(Board, 'U', CurrentRow, CurrentColumn):-
-    CurrentRow > 0,
-    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+    CurrentRow > 0.
 
 validate_boundaries_suicide(Board, 'D', CurrentRow, CurrentColumn):-
-    CurrentRow < 6,
-    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+    CurrentRow < 6.
 
 validate_boundaries_suicide(Board, 'R', CurrentRow, CurrentColumn):-
-    CurrentColumn < 6,
-    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+    CurrentColumn < 6.
 
 validate_boundaries_suicide(Board, 'L', CurrentRow, CurrentColumn):-
-    CurrentColumn > 0,
-    write('\nACCEPTED MOVE BOUNDARIES SUICIDE\n\n').
+    CurrentColumn > 0.
 % MOVES INTO OPOSITE PIECE
 check_empty(Board, NLine, NCol, NextBoard, Player, Computer):-
 	getPiece(Board, NLine, NCol, X),

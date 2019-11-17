@@ -99,7 +99,8 @@ check_game_over(Board, Winner) :-
 
 
 check_column([], Winner) :-
-    write('Test1 \n'),
+    NewWinner is 3,
+    Winner is NewWinner,
     true.
 
 check_column([H|T], Winner) :-
@@ -116,7 +117,8 @@ check_vertical(List, Winner) :-
 check_vertical(List, Winner) :-
     nth0(0, List, black),
     write('GAME OVER\n'),
-    Winner is 0,
+    NewWinner is 0,
+    Winner is NewWinner,
     write('The Winner Is: '),
     write(white),
     write('\n'),
@@ -126,7 +128,8 @@ check_vertical(List, Winner) :-
 check_vertical(List, Winner) :-
     nth0(0, List, white),
     write('GAME OVER\n'),
-    Winner is 1,
+    NewWinner is 1,
+    Winner is NewWinner,
     write('The Winner Is: '),
     write(black),
     write('\n'),
@@ -136,7 +139,8 @@ check_vertical(List, Winner) :-
 check_vertical(List, Winner) :-
     nth0(6, List, black),
     write('GAME OVER\n'),
-    Winner is 0,
+    NewWinner is 0,
+    Winner is NewWinner,
     write('The Winner Is: '),
     write(white),
     write('\n'),
@@ -146,7 +150,8 @@ check_vertical(List, Winner) :-
 check_vertical(List, Winner) :-
     nth0(6, List, white),
     write('GAME OVER\n'),
-    Winner is 1,
+    NewWinner is 1,
+    Winner is NewWinner,
     write('The Winner Is: '),
     write(black),
     write('\n'),
@@ -156,7 +161,6 @@ check_vertical(List, Winner) :-
 % First row
 check_row([H|T], Index, Winner) :-
     Index == 0,
-    write(Index),
     check_horizontal(H, Winner),
     get_last_row([H|T], 0, Row, Winner).
 
@@ -165,7 +169,8 @@ check_row([H|T], Index, Winner) :-
 check_horizontal(List, Winner) :-
     member(white, List),
     write('Game Over!!!'),
-    Winner is 1,
+    NewWinner is 1,
+    Winner is NewWinner,
     write('The Winner Is: '),
     write(black),
     write('\n'),
@@ -176,7 +181,8 @@ check_horizontal(List, Winner) :-
 check_horizontal(List, Winner) :-
     member(black, List),   %TRUE IF GAME OVER
     write('Game Over!!!'),
-    Winner is 0,
+    NewWinner is 0,
+    Winner is NewWinner,
     write('The Winner Is: '),
     write(white),
     write('\n'),
@@ -190,13 +196,11 @@ check_horizontal(List, Winner) :-
 
 get_last_row([H|T], Index, Row, Winner) :-
     Index < 6,
-    write(Index),
     NewIndex is Index + 1,
     get_last_row(T, NewIndex, Row, Winner).
 
 get_last_row([H|T], Index, Row, Winner) :-
     Index == 6,
-    write(Index),
     Row = H,
     check_horizontal(Row, Winner).
 
