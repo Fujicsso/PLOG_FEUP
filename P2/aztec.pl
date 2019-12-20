@@ -6,31 +6,25 @@ aztec_test(N):-
  write('test 1'), nl,
  length(Table,N),
  write('test 2'), nl,
- domain(Table,1,9),
+ N1 is 1,
+ createTable(Table, N1),
  write('test 3'), nl,
- N is 1,
- createTable(Table, N),
- write('test 4'), nl,
  %constrainTable(Table),
  % all_distinct(Cols), % Redundante mas diminui o tempo de resolução
+ write('test 4'), nl,
  write('test 5'), nl,
- labeling([],Table),
- write('test 6'), nl,
  write(Table).
 
 
-createTable([]).
+createTable([], _).
 
 createTable([H | RTable], N):-
  write('test'), nl,
  length(TableRow, N),
- write('test'), nl,
  domain(TableRow, 1,9), 
- write('test'), nl,
- H is TableRow,
- write('test'), nl,
+ H = TableRow,
  N1 is N + 1,
- write('test'), nl,
+ write('test2'), nl,
  createTable(RTable, N1).
 
 
