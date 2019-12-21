@@ -13,7 +13,11 @@ aztec_test(N):-
  % all_distinct(Cols), % Redundante mas diminui o tempo de resolução
  write('test 4'), nl,
  write('test 5'), nl,
- write(Table).
+ TestTable = ([[2],[1,1],[3,2,2]]),
+%  labeling([], Table),
+ display_spaces(N), write('  ___'), nl,
+ display_aztec(Table, N).
+%  write(Table).
 
 
 createTable([], _).
@@ -57,7 +61,51 @@ noattack(X,Y,K) :-
  X - K #\= Y.
 
 
-% Test: nqueens(4,C).
-% C = [2, 4, 1, 3] More? (;)
-% C = [3, 1, 4, 2] More? (;)
-% no (more) solution.
+
+display_aztec([]).
+
+display_aztec([H | TCol], N):-
+ display_spaces(N),
+ write('_|'), display_aztec_row(H), write('_'), nl,
+ N1 is N - 1,
+ display_aztec(TCol, N1).
+
+
+
+
+display_aztec_row([]).
+
+display_aztec_row([H | Row]):-
+ isSlotFree(H, 1), 
+ write('|'),
+ display_aztec_row(Row).
+
+
+
+isSlotFree(H, N):-
+ N > 9,
+ write('_ _').
+
+isSlotFree(H, N):-
+ N < 10,
+ H \== N,
+ N1 is N + 1,
+ isSlotFree(H, N1).
+
+isSlotFree(H, N):-
+ N < 10,
+ H == N,
+ write('_'), write(H), write('_').
+
+
+
+display_spaces(N):-
+ N > 0,
+ write('  '),
+ N1 is N - 1,
+ display_spaces(N1).
+ 
+display_spaces(N):-
+ N =< 0.
+
+ 
