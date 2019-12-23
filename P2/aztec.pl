@@ -1,20 +1,17 @@
 
 
 :-use_module(library(clpfd)).
+:-use_module(library(lists)).
 
 aztec_test(N):-
- write('test 1'), nl,
  length(Table,N),
- write('test 2'), nl,
- N1 is 1,
- createTable(Table, N1),
+ createTable(Table, 1),
  write('test 3'), nl,
- %constrainTable(Table),
- % all_distinct(Cols), % Redundante mas diminui o tempo de resolução
- write('test 4'), nl,
- write('test 5'), nl,
+%  constrainTable(Table),
+%  all_distinct(Cols), % Redundante mas diminui o tempo de resolução
  TestTable = ([[2],[1,1],[3,2,2]]),
-%  labeling([], Table),
+ append(Table, TableList),
+ labeling([], TableList),
  display_spaces(N), write('  ___'), nl,
  display_aztec(Table, N).
 %  write(Table).
@@ -47,9 +44,14 @@ constrainRow2(H, [Y | V], N):-
  
 
 
+
+
+
+
+
 safe(_,[],_).
 
-safe(X,[Y | T], K) :-
+safe(X,[Y | T], K):-
  noattack(X,Y,K),
  K1 is K + 1,
  safe(X,T,K1).
