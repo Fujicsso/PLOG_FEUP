@@ -6,7 +6,6 @@
 aztec_test(N):-
  length(Table,N),
  createTable(Table, 1),
- write('test 3'), nl,
 %  all_distinct(Cols), 
 %  TestTable = ([[2],[1,1],[3,2,2]]),
  append(Table, TableList),
@@ -21,31 +20,33 @@ aztec_test(N):-
 createTable([], _).
 
 createTable([H | RTable], N):-
- write('test'), nl,
  length(TableRow, N),
  domain(TableRow, 1,9), 
  H = TableRow,
  N1 is N + 1,
- write('test2'), nl,
  createTable(RTable, N1).
 
 
-constrainTable([]).
+constrainTable([],_).
 
 constrainTable([H | RTable], N):-
- write('test 555'), nl,
+ write('test Pre Constrain Row'), nl,
  constrainRow(H, RTable, N),
  N1 is N + 1,
  constrainTable(RTable, N1).
 
 
 
-constrainRow([]).
+constrainRow([],_,_).
+
+constrainRow(_,[],_).
 
 constrainRow([H | Row], RTable, N):-
- write('test 4'), nl,
+ write('test Pre Sep3Var'), nl,
+ write(H), nl,
+ write(RTable), nl,
  separateInto3Variables(H, RTable, N1R1, N1R2, N2R2),
- write('test 3'), nl,
+ write('test Post Sep3Var'), nl,
 %  write(RTable), nl,
 %  write(N1R1), nl,
 %  write(N1R2), nl,
@@ -54,12 +55,10 @@ constrainRow([H | Row], RTable, N):-
  N1R1 #= N1R2 - N2R2;
  N1R1 #= N2R2 - N1R2;
  N1R1 #= N1R2 * N2R2;
- N1R1 #= N1R2 / N2R2;
- N1R1 #= N2R2 / N1R2),
- write('test 77'), nl,
+ (N1R1 #= N1R2 // N2R2, mod(N1R2,N2R2) #= 0);
+ (N1R1 #= N2R2 // N1R2, mod(N2R2,N1R2) #= 0)),
+ write('test Pos Constrain Row'), nl,
  constrainRow(Row, RTable, N).
-
-
 
 
 
