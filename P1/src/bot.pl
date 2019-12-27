@@ -1,12 +1,8 @@
-gamePvC(Board, Player1, Player2) :-
-    write('Starting Game!\n'),
-	game_loop(Board, Player1, Player2, 'P', 'C').
 
-
-gameCvC(Board, Player1, Player2) :-
-    write('Starting Game!\n'),
-	game_loop(Board, Player1, Player2, 'C', 'C').
-
+% Game loop for Computer v Computer game mode.
+% Board - current game board
+% Player1 - color of player 1's disk
+% Player2 - color of player 2's disk
 game_loop(Board, Player1, Player2, 'C', 'C') :-
     bot_move(Board, Player1, PlayerOneBoard_1, 1),
     bot_move(PlayerOneBoard_1, Player1, PlayerOneBoard_2, 1),
@@ -14,15 +10,24 @@ game_loop(Board, Player1, Player2, 'C', 'C') :-
     bot_move(PlayerTwoBoard_1, Player2, PlayerTwoBoard_2, 1),
     game_loop(PlayerTwoBoard_2, Player1, Player2, 'C', 'C').
 
+
+% Game loop for Player v Computer game mode.
+% Board - current game board
+% Player1 - color of player 1's disk
+% Player2 - color of player 2's disk
 game_loop(Board, Player1, Player2, 'P', 'C') :-
     choose_move(Board, Player1, PlayerOneBoard, 'P'),
     bot_move(PlayerOneBoard, Player2, PlayerTwoBoard_1, 1),
     bot_move(PlayerTwoBoard_1, Player2, PlayerTwoBoard_2, 1),
     game_loop(PlayerTwoBoard_2, Player1, Player2, 'P', 'C').
 
-%easy bot
+% Bot move. Checks for Game Over, selects a random disk of it's color to move,
+% generates random move that is valid for those coordinates and, if it contins a push,
+% checks if the push is valid.
+% Board - current game state board
+% Player - Player which the move belongs to
+% NewBoard - New Board, updates after move is executed
 bot_move(Board, Player, NewBoard, 1) :-
-    write('\nPlayer '), write(Player), write(' Turn!\n'),
     display_game(Board),
     sleep(1),
     check_game_over(Board, Winner),
@@ -33,24 +38,15 @@ bot_move(Board, Player, NewBoard, 1) :-
     bot_set_cell(Move, Player, R, C, NewRow, NewCol, Board, NewBoard).
 
 
-%hard bot
-% bot_move(Board, Player, NewBoard, 2) :-
-%     display_game(Board),
-%     repeat,
-%     get_valid_plays(Board, Player, Plays, R, C).
-
-% check_end_game(Board, [], R, C).
-
-% check_end_game(Board, [H|T], R, C) :-
-%     checkmate(Board, H, R, C).
-
-
-% checkmate(Board, H, R, C) :-
-    
-
-
-
-
+% Executes move and replaces disks after a move is made
+% Move - Move to be made
+% Player - Player which the move belongs to
+% Row - Row of the cell to be changed
+% Col - Column of the cell to be changed
+% NewRow - Row of the cell to be changed into
+% NewCol - Column of the cell to be changed into
+% Board - Board previous to move
+% NewBoard - Board updated after move
 bot_set_cell('U', Player, Row, Col, NewRow, NewCol, Board, NewBoard) :-
     NewRow is Row - 1,
     NewCol is Col,
@@ -76,19 +72,35 @@ bot_set_cell('L', Player, Row, Col, NewRow, NewCol, Board, NewBoard) :-
     replaceInMatrix(TempBoard, NewRow, NewCol, Player, NewBoard).
 
 
-
+% Returns valid plays in variable Plays, for a given player in a given position
+% Board - current board
+% Player - current player
+% Plays - possible plays to be made
+% R - row of current disk
+% C - column of current disk
 get_valid_plays(Board, Player, Plays, R, C) :-
     getValidCoords(Board, R, C, Player),
     findall(Move, validate_play(Board, Move, Player, R, C, Move, _, _), Plays).
-    % show_records(Plays), write('\n').
 
 
+% Validates a play for a bot. Checks if boundaries are not directly passed,
+% and checks if it can push a row of disks, it they are aligned.
+% Board - current board
+% Move - move to be made
+% Player - current player
+% ValidatedRow - row that has been validated after a valid move has beem picked
+% ValidatedColumn - column that has been validated after a valid move has beem picked
+% FinalBoard - Board to be returned, with updated cells
 validate_play(Board, Move, Player, ValidatedRow, ValidatedColumn, NewMove, NewerMove, FinalBoard) :-
     validate_boundaries(Board, Move, ValidatedRow, ValidatedColumn),
     validate_push(Board, Player, NewMove, ValidatedRow, ValidatedColumn, NewerMove, FinalBoard).
 
 
-
+% Gets valid coordinates for a disk of a player
+% Board - current board
+% R - row of cell to be returned
+% C - column of cell to be returned
+% Player - current player
 getValidCoords(Board, R, C, Player):-
     random(1,7,Row),
     random(1,7,Col),
@@ -107,10 +119,15 @@ getValidCoords(Board, R, C, Player):-
 
 
 
+% Chooses random move from valid plays
+% Member - chosem move
+% Plays - list of valid plays
 choose_random_move(Member, Plays) :-
     random_member(Member, Plays).
 
 
+% Checks if game is over for a given state board
+% Board - current state board
 check_game_over(Board) :-
     check_row(Board, 0),
     check_column(Board).
@@ -123,7 +140,6 @@ check_column([H|T]) :-
     check_vertical(H),
     check_column(T).
 
-%TRUE IF GAMEOVER. Looks for black cell
 check_vertical(List) :-
     \+ nth0(0, List, black),
     \+ nth0(0, List, white),
@@ -152,29 +168,25 @@ check_vertical(List) :-
 
 
 
-% First row
 check_row([H|T], Index) :-
     Index == 0,
-    write(Index),
     check_horizontal(H),
     get_last_row([H|T], 0, Row).
 
 
-% White cell. Game Over!
 check_horizontal(List) :-
     member(white, List),
-    write('Game Over!!!'),   %TRUE IF GAME OVER
+    write('Game Over!!!'), 
     halt(0).   
     
-    % Black cell. Game Over!
 check_horizontal(List) :-
-    member(black, List),   %TRUE IF GAME OVER
-    write('Game Over!!!'),   %TRUE IF GAME OVER
+    member(black, List),   
+    write('Game Over!!!'),  
     halt(0).   
 
 % Black cell. Game Over!
 check_horizontal(List) :-
-    \+ member(black, List),   %TRUE IF GAME OVER
+    \+ member(black, List),  
     \+ member(white, List).
 
 get_last_row([H|T], Index, Row) :-
@@ -190,9 +202,3 @@ get_last_row([H|T], Index, Row) :-
 
 get_last_row([], Index, Row).
 
-
-show_records([]).
-
-show_records([A|B]) :-
-    write(A), write(' . '),
-    show_records(B).
