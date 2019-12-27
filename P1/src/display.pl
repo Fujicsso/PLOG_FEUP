@@ -1,5 +1,4 @@
 
-
 startGameDisplay:-
     lastBoard(Board),
     clearTheConsole,
@@ -18,78 +17,6 @@ initialBoard(
         [empty, empty, empty, empty, empty, empty, empty],
         [empty, empty, white, white, white, empty, empty],
         [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty]
-    ]
-    ).
-
-initialBoard2(
-    [
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, black, empty, black, empty, black, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, white, empty, white, empty, white, empty],
-        [empty, empty, empty, empty, empty, empty, empty]
-    ]
-    ).
-
-initialBoard3(
-    [
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, black, empty, empty, empty],
-        [empty, empty, black, empty, black, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, white, empty, white, empty, empty],
-        [empty, empty, empty, white, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty]
-    ]
-    ).
-
-initialBoard4(
-    [
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, black, empty, black, empty, empty],
-        [empty, empty, empty, black, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, white, empty, empty, empty],
-        [empty, empty, white, empty, white, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty]
-    ]
-    ).
-
-midBoard(
-    [
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, black, black, white, white, empty],
-        [empty, empty, black, white, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty]
-    ]
-    ).
-
-lastBoard(
-    [
-        [black, empty, empty, white, empty, empty, white],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, empty, empty, empty, black, white, empty],
-        [empty, empty, black, empty, white, white, empty],
-        [white, black, empty, empty, empty, empty, black]
-    ]
-    ).
-
-testBoard(
-    [
-        [empty, empty, empty, empty, empty, empty, empty],
-        [empty, white, empty, empty, empty, black, empty],
-        [empty, white, black, black, white, black, empty],
-        [empty, black, black, black, white, white, empty],
-        [empty, black, black, black, white, white, empty],
-        [empty, empty, empty, empty, empty, white, empty],
         [empty, empty, empty, empty, empty, empty, empty]
     ]
     ).

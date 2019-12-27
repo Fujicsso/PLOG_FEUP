@@ -1,3 +1,7 @@
+%Chooses move of Player
+% Board - current board
+% Player - current Player
+% FinalBoard - updated Board to be returned
 choose_move(Board, Player, FinalBoard, 'P') :-
     write('\n\nPlayer '), write(Player), write(' turn!\n'),
     display_game(Board),
@@ -5,6 +9,7 @@ choose_move(Board, Player, FinalBoard, 'P') :-
     display_game(FinalBoard1),
     get_play(FinalBoard1, Player, ValidatedRow2, ValidatedColumn2, NewRow2, NewColumn2, FinalBoard, Board).
 
+% Gets play of a given player
 get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalBoard, PreviousBoard) :-
     check_game_over(Board, Winner),
     Winner \= 1,
@@ -18,13 +23,8 @@ get_play(Board, Player, ValidatedRow, ValidatedColumn, NewRow, NewColumn, FinalB
     validate_push(Board, Player, Move, ValidatedRow, ValidatedColumn, NewerMove, FinalBoard),
     checkNullMove(FinalBoard, PreviousBoard),
     !.
-    % update_coords(NewMove, ValidatedRow, ValidatedColumn, UpdatedRow, UpdatedColumn).
 
-
-% CHECK NULL PLAY
-
-
-
+% Check if move is not null
 checkNullMove(Board1, Board2):-
     Board1 == Board2,
     write('This play will make your 2 plays null, chose another move\n'),
@@ -34,14 +34,14 @@ checkNullMove(Board1, Board2):-
     Board1 \= Board2.
 
 
-
-%  MOVES INTO OPOSITE PIECE
+% Validates if push is valid, or player's pieces are outnumbered
 validate_push(Board, Player, NewMove, Row, Column, NewerMove, FinalBoard):-
     update_coords(NewMove, Row, Column, TestRow, TestColumn),
     getValueFromMatrix(Board, TestRow, TestColumn, Value),
     manageTypeMatrix(Value, Player, Board, NewMove, Row, Column, TestRow, TestColumn, FinalBoard).
 
 
+% Replaces validates cells in Board
 manageTypeMatrix(empty, Player, Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
     replaceInMatrix(Board, OldRow, OldColumn, empty, NewBoard),
     replaceInMatrix(NewBoard, Row, Column, Player, FinalBoard).
@@ -56,7 +56,6 @@ manageTypeMatrix(black, black,  Board, NewMove, OldRow, OldColumn, Row, Column, 
 
 
 manageTypeMatrix(black, white,  Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
-    write('Cell to move into is occupied//Cant Push!\n'),
     fail.
     
 
@@ -67,7 +66,6 @@ manageTypeMatrix(white, white,  Board, NewMove, OldRow, OldColumn, Row, Column, 
     replaceLineInMatrix(Board, NewMove, OldRow, OldColumn, white, FinalCounter, FinalBoard, Collision).
 
 manageTypeMatrix(white, black,  Board, NewMove, OldRow, OldColumn, Row, Column, FinalBoard):-
-    write('Cell to move into is occupied//Cant Push!\n'),
     fail.
 
 
@@ -84,8 +82,8 @@ check_next_pos_anti_line(Board, Player, Move, Row, Column, Counter, FinalCounter
     getValueFromMatrix(Board, TestRow, TestColumn, Value),
     manageCounterAntiLine(Board, Player, Value, Move, TestRow, TestColumn, Counter, FinalCounter).
 
-% LINE COUNTER MANAGER
 
+% LINE COUNTER MANAGER
 manageCounterLine(Board, Player, empty, Move, Row, Column, Counter, FinalCounter, Collision):-
     FinalCounter is Counter,
     validate_boundaries_suicide(Board, Move, Row, Column),
@@ -110,8 +108,8 @@ manageCounterLine(Board, white, black, Move, Row, Column, Counter, FinalCounter,
     check_next_pos_anti_line(Board, white, Move, Row, Column, NewCounter, FinalCounter).
 
 
-% ANTI-LINE COUNTER MANAGER
 
+% ANTI-LINE COUNTER MANAGER
 manageCounterAntiLine(Board, Player, empty, Move, Row, Column, Counter, FinalCounter):-
     FinalCounter is Counter.
 
@@ -137,7 +135,6 @@ manageCounterAntiLine(Board, white, black, Move, Row, Column, Counter, FinalCoun
 
 
 % FinalCounter Notifier
-
 notifyCounter(Counter):-
     Counter > 0,
     write('Can Push!\n').
@@ -217,8 +214,6 @@ replaceLineInMatrix(Board, Move, OldRow, OldColumn, Player, 3, FinalBoard, 0):-
 
 
 
-
-
 % Checks if the selected piece's color is correct, taking into account the Player
 piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
     getValueFromMatrix(Board, Row, Column, Value),
@@ -236,9 +231,6 @@ piece_color(Board, Player, Row, Column, FinalRow, FinalColumn) :-
     write('Selected cell does not contain a piece of the correct color.\n'),
     write('Choose the coords for the cell to move.\n'),
     false.
-    % manageRow(CurrentRow), write(CurrentRow),
-    % manageColumn(CurrentColumn), write(CurrentColumn),
-    % piece_color(Board, Player, CurrentRow, CurrentColumn, FinalRow, FinalColumn).
     
 
 % Checks if the cell to be moved into is empty
@@ -250,7 +242,7 @@ empty_space(Board, Player, Row, Column, FinalRow, FinalColumn) :-
 
 
 
-
+% Update coordinates (CurrentRow, CurrentColumn) to (NewRow, NewColumn) given a Move
 update_coords(Move, CurrentRow, CurrentColumn, NewRow, NewColumn) :-
     Move == 'U',
     NewRow is CurrentRow - 1,
@@ -289,60 +281,36 @@ get_move(MoveS) :-
 %  MOVES OUT OF BOUNDARIES
 validate_boundaries(Board, 'U', 1, CurrentColumn):-
     write('ERROR: That move is not valid! UP\n\n'),
-    % write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
-    % write('\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, 1, CurrentColumn, NewMove).
     false.
 
 validate_boundaries(Board, 'D', 5, CurrentColumn):-
     write('ERROR: That move is not valid! DOWN\n\n'),
-    % write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
-    % write('\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, 5, CurrentColumn, NewMove).
     false.
 
 validate_boundaries(Board, 'R', CurrentRow, 5):-
     write('ERROR: That move is not valid! RIGHT\n\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, CurrentRow, 5, NewMove).
     false.
 
 validate_boundaries(Board, 'L', CurrentRow, 1):-
     write('ERROR: That move is not valid! LEFT\n\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, CurrentRow, 1, NewMove).
     false.
 
 
-
+% Checks that player is not commiting suicice
 validate_boundaries_suicide(Board, 'U', 0, CurrentColumn):-
     write('ERROR: That move is not valid! SUICIDE UP\n\n'),
-    % write('Row: '), write('1\n'), write('Column: '), write(CurrentColumn), 
-    % write('\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, 1, CurrentColumn, NewMove).
     false.
 
 validate_boundaries_suicide(Board, 'D', 6, CurrentColumn):-
     write('ERROR: That move is not valid! SUICIDE DOWN\n\n'),
-    % write('Row: '), write('5\n'), write('Column: '), write(CurrentColumn), 
-    % write('\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, 5, CurrentColumn, NewMove).
     false.
 
 validate_boundaries_suicide(Board, 'R', CurrentRow, 6):-
     write('ERROR: That move is not valid! SUICIDE RIGHT\n\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, CurrentRow, 5, NewMove).
     false.
 
 validate_boundaries_suicide(Board, 'L', CurrentRow, 0):-
     write('ERROR: That move is not valid! SUICIDE LEFT\n\n'),
-    % get_move(M),
-    % validate_boundaries(Board, M, CurrentRow, 1, NewMove).
     false.
 
 
@@ -371,26 +339,18 @@ validate_boundaries_suicide(Board, 'R', CurrentRow, CurrentColumn):-
 
 validate_boundaries_suicide(Board, 'L', CurrentRow, CurrentColumn):-
     CurrentColumn > 0.
+
+
 % MOVES INTO OPOSITE PIECE
 check_empty(Board, NLine, NCol, NextBoard, Player, Computer):-
 	getPiece(Board, NLine, NCol, X),
 	X == empty, setPiece(Board, NLine, NCol, Player, NextBoard);
     X \= empty, write('There is already a piece there! Try again!'), nl, check_empty(Board, NLine, NCol, NextBoard, Player, Computer).
 
-% DEFAULT
-% validate_move(Board, _Move, CurrentRow, CurrentColumn) :-
-%     write('ERROR: That move is not valid! DEFAULT\n\n'),
-%     get_move(M),
-%     validate_move(Board, M, CurrentRow, CurrentColumn).
 
 
 validate_cell(Player, CurrentRow, CurrentRow) :-
-    getValueFromMatrix(Board, CurrentRow, CurrentColumn, Elem),
-    write('Player: '), write(Player), write('\n'),
-    write('Elem: '), write(Elem), write('\n').
-
-
-
+    getValueFromMatrix(Board, CurrentRow, CurrentColumn, Elem).
 
 
 manageRow(CurrentRow) :-
@@ -452,4 +412,3 @@ validateColumn(Row, CurrentColumn) :-
     write('ERROR: That column is not valid!\n\n'),
     write(Row), write('\n\n'),
     manageColumn(CurrentColumn).
-
