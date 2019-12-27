@@ -7,10 +7,11 @@ aztec_test(N):-
  length(Table,N),
  createTable(Table, 1),
  write('test 3'), nl,
-%  constrainTable(Table),
-%  all_distinct(Cols), % Redundante mas diminui o tempo de resolução
- TestTable = ([[2],[1,1],[3,2,2]]),
+%  all_distinct(Cols), 
+%  TestTable = ([[2],[1,1],[3,2,2]]),
  append(Table, TableList),
+ constrainTable(Table, 1),
+ write('TEEEESTE'), nl,
  labeling([], TableList),
  display_spaces(N), write('  ___'), nl,
  display_aztec(Table, N).
@@ -31,21 +32,49 @@ createTable([H | RTable], N):-
 
 constrainTable([]).
 
-constrainTable([H | RTable]):-
+constrainTable([H | RTable], N):-
+ write('test 555'), nl,
  constrainRow(H, RTable, N),
- constrainTable(RTable).
+ N1 is N + 1,
+ constrainTable(RTable, N1).
+
+
+
+constrainRow([]).
+
+constrainRow([H | Row], RTable, N):-
+ write('test 4'), nl,
+ separateInto3Variables(H, RTable, N1R1, N1R2, N2R2),
+ write('test 3'), nl,
+%  write(RTable), nl,
+%  write(N1R1), nl,
+%  write(N1R2), nl,
+%  write(N2R2), nl,
+ (N1R1 #= N1R2 + N2R2;
+ N1R1 #= N1R2 - N2R2;
+ N1R1 #= N2R2 - N1R2;
+ N1R1 #= N1R2 * N2R2;
+ N1R1 #= N1R2 / N2R2;
+ N1R1 #= N2R2 / N1R2),
+ write('test 77'), nl,
+ constrainRow(Row, RTable, N).
 
 
 
 
-constrainRow2([]).
 
-constrainRow2(H, [Y | V], N):-
- 
-
-
+separateInto3Variables(H1, [R2 | Rows], N1R1, N1R2, N2R2):-
+ N1R1 = H1,
+ separateInto2Variables(R2, N1R1, N1R2, N2R2).
 
 
+separateInto2Variables([H2 | Row2], N1R1, N1R2, N2R2):-
+ N1R2 = H2,
+ separateInto1Variables(Row2, N1R1, N1R2, N2R2).
+
+
+separateInto1Variables([H3 | Row2], N1R1, N1R2, N2R2):-
+ N2R2 = H3.
 
 
 
