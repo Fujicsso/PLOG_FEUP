@@ -8,11 +8,14 @@ aztec_test_solve(N):-
 %  all_distinct(Cols), 
  TestTable = ([[2],[1,2],[3,_,_]]),
  append(TestTable, TableList),
+%  domain(TableList,1,9),
+ TableList ins 1..9,
  constrainTable(TestTable, 1),
  write('TEEEESTE'), nl,
  labeling([], TableList),
  display_spaces(N), write('  ___'), nl,
- display_aztec(TestTable, N).
+ display_aztec(TestTable, N),
+ false.
 
 
 
@@ -38,7 +41,7 @@ createTable([], _).
 createTable([H | RTable], N):-
  length(TableRow, N),
 %  domain(TableRow, 1,9),
- TableRow ins 1..9,
+%  TableRow ins 1..9,
  H = TableRow,
  N1 is N + 1,
  createTable(RTable, N1).
@@ -49,8 +52,10 @@ constrainTable([],_).
 constrainTable([H | RTable], N):-
  write('test Pre Constrain Row'), nl,
  separateRows(H, RTable, R2),
- % sisctusPrologDomain(H,R2),
- swiPrologDomain(H,R2),
+%  sisctusPrologDomain(H),
+%  sisctusPrologDomain(R2),
+%  swiPrologDomain(H),
+%  swiPrologDomain(R2),
  constrainRow(H, R2, N),
  N1 is N + 1,
  constrainTable(RTable, N1).
@@ -63,17 +68,15 @@ separateRows(H, [Row2 | RTable], R2):-
  R2 = Row2.
 
 
-swiPrologDomain(_,[]).
+% swiPrologDomain([]).
 
-swiPrologDomain(H,R2):-
- H ins 1..9,
- R2 ins 1..9.
+% swiPrologDomain(H):-
+%  H ins 1..9.
 
-sisctusPrologDomain(_,[]).
+% sisctusPrologDomain([]).
 
-sisctusPrologDomain(H,R2):-
- domain(H,1,9),
- domain(R2,1,9).
+% sisctusPrologDomain(H):-
+%  domain(H,1,9).
 
 
 
