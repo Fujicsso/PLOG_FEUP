@@ -1,7 +1,24 @@
 
-
+:-debug.
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
+
+
+
+aztec_test_solve(N):-
+%  all_distinct(Cols), 
+ TestTable = ([[2],[1,2],[3,_,_]]),
+ append(TestTable, TableList),
+ constrainTable(TestTable, 1),
+ write('TEEEESTE'), nl,
+ labeling([], TableList),
+ display_spaces(N), write('  ___'), nl,
+ display_aztec(TestTable, N),
+ false.
+
+
+
+
 
 aztec_test(N):-
  length(Table,N),
@@ -13,7 +30,8 @@ aztec_test(N):-
  write('TEEEESTE'), nl,
  labeling([], TableList),
  display_spaces(N), write('  ___'), nl,
- display_aztec(Table, N).
+ display_aztec(Table, N),
+ false.
 %  write(Table).
 
 
@@ -21,7 +39,8 @@ createTable([], _).
 
 createTable([H | RTable], N):-
  length(TableRow, N),
- domain(TableRow, 1,9), 
+%  domain(TableRow, 1,9),
+ TableRow ins 1..9,
  H = TableRow,
  N1 is N + 1,
  createTable(RTable, N1).
@@ -31,9 +50,18 @@ constrainTable([],_).
 
 constrainTable([H | RTable], N):-
  write('test Pre Constrain Row'), nl,
- constrainRow(H, RTable, N),
+ separateRows(H, RTable, R2),
+ constrainRow(H, R2, N),
  N1 is N + 1,
  constrainTable(RTable, N1).
+
+
+
+separateRows(_,[],_).
+
+separateRows(H, [Row2 | RTable], R2):-
+ R2 = Row2.
+
 
 
 
@@ -41,38 +69,29 @@ constrainRow([],_,_).
 
 constrainRow(_,[],_).
 
-constrainRow([H | Row], RTable, N):-
+constrainRow([H | Row], [H2 | Row2], N):-
  write('test Pre Sep3Var'), nl,
- write(H), nl,
- write(RTable), nl,
- separateInto3Variables(H, RTable, N1R1, N1R2, N2R2),
+ separateInto3Variables(H, H2, Row2, N1R1, N1R2, N2R2),
  write('test Post Sep3Var'), nl,
 %  write(RTable), nl,
 %  write(N1R1), nl,
 %  write(N1R2), nl,
 %  write(N2R2), nl,
- (N1R1 #= N1R2 + N2R2;
- N1R1 #= N1R2 - N2R2;
- N1R1 #= N2R2 - N1R2;
- N1R1 #= N1R2 * N2R2;
- (N1R1 #= N1R2 // N2R2, mod(N1R2,N2R2) #= 0);
- (N1R1 #= N2R2 // N1R2, mod(N2R2,N1R2) #= 0)),
+ ((N1R1 #= N1R2 + N2R2) #\/
+ (N1R1 #= N1R2 - N2R2) #\/
+ (N1R1 #= N2R2 - N1R2) #\/
+ (N1R1 #= N1R2 * N2R2) #\/
+ (N1R2#>=N2R2 #/\ N1R1 #= N1R2 div N2R2 #/\ rem(N1R2,N2R2) #= 0) #\/
+ (N2R2#>=N1R2 #/\ N1R1 #= N2R2 div N1R2 #/\ rem(N2R2,N1R2) #= 0)),
  write('test Pos Constrain Row'), nl,
- constrainRow(Row, RTable, N).
+ constrainRow(Row, Row2, N).
 
 
 
-separateInto3Variables(H1, [R2 | Rows], N1R1, N1R2, N2R2):-
+
+separateInto3Variables(H1, H2, [H3 | Row2], N1R1, N1R2, N2R2):-
  N1R1 = H1,
- separateInto2Variables(R2, N1R1, N1R2, N2R2).
-
-
-separateInto2Variables([H2 | Row2], N1R1, N1R2, N2R2):-
  N1R2 = H2,
- separateInto1Variables(Row2, N1R1, N1R2, N2R2).
-
-
-separateInto1Variables([H3 | Row2], N1R1, N1R2, N2R2):-
  N2R2 = H3.
 
 
@@ -92,7 +111,7 @@ noattack(X,Y,K) :-
 
 
 
-display_aztec([]).
+display_aztec([],_).
 
 display_aztec([H | TCol], N):-
  display_spaces(N),
@@ -130,12 +149,12 @@ isSlotFree(H, N):-
 
 
 display_spaces(N):-
+ N =< 0.
+
+display_spaces(N):-
  N > 0,
  write('  '),
  N1 is N - 1,
  display_spaces(N1).
- 
-display_spaces(N):-
- N =< 0.
 
  

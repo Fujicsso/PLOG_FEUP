@@ -13,7 +13,7 @@ quadradoMagico(Size):-
     Q13 + Q23 + Q33 #= Sum,
     Q11 + Q22 + Q33 #= Sum,
     Q13 + Q22 + Q31 #= Sum,
-    Q11 #< Q13, Q11 #< Q31, Q11 #< Q33, Q13 #< Q31,  %Restricoes a simetrias
+    % Q11 #< Q13, Q11 #< Q31, Q11 #< Q33, Q13 #< Q31,  %Restricoes a simetrias
     labeling([],Quadrantes),
     write(Quadrantes),
     false.
