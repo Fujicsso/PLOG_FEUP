@@ -1,5 +1,4 @@
 
-:-debug.
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
 
@@ -13,8 +12,7 @@ aztec_test_solve(N):-
  write('TEEEESTE'), nl,
  labeling([], TableList),
  display_spaces(N), write('  ___'), nl,
- display_aztec(TestTable, N),
- false.
+ display_aztec(TestTable, N).
 
 
 
@@ -51,6 +49,8 @@ constrainTable([],_).
 constrainTable([H | RTable], N):-
  write('test Pre Constrain Row'), nl,
  separateRows(H, RTable, R2),
+ % sisctusPrologDomain(H,R2),
+ swiPrologDomain(H,R2),
  constrainRow(H, R2, N),
  N1 is N + 1,
  constrainTable(RTable, N1).
@@ -62,6 +62,18 @@ separateRows(_,[],_).
 separateRows(H, [Row2 | RTable], R2):-
  R2 = Row2.
 
+
+swiPrologDomain(_,[]).
+
+swiPrologDomain(H,R2):-
+ H ins 1..9,
+ R2 ins 1..9.
+
+sisctusPrologDomain(_,[]).
+
+sisctusPrologDomain(H,R2):-
+ domain(H,1,9),
+ domain(R2,1,9).
 
 
 
