@@ -78,6 +78,7 @@ constrainRow([H | Row], [H2 | Row2], N):-
 %  write(N1R1), nl,
 %  write(N1R2), nl,
 %  write(N2R2), nl,
+ write('test Conditions'), nl,
  ((N1R1 #= N1R2 + N2R2) #\/
  (N1R1 #= N1R2 - N2R2) #\/
  (N1R1 #= N2R2 - N1R2) #\/
