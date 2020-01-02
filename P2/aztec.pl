@@ -1,21 +1,204 @@
 
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
+:-use_module(library(random)).
 
 
 
-aztec_test_solve(N, TestTable):-
+aztec:-
+ menu.
+
+
+
+
+menu:-
+ repeat,
+ write('          ------------------------------          '), nl,
+ write('          |  1. Solve a Random Level   |          '), nl,
+ write('          |  2. Make a Level           |          '), nl,
+ write('          ------------------------------          '), nl,
+ read(Input),
+ manageInputMenu(Input),
+ !.
+
+
+
+
+ manageInputMenu(1):-
+  repeat,
+  write('          ----------------------------------              '), nl,
+  write('          |  How big should the level be?  |              '), nl,
+  write('          |       (Tip: 4 to 8 rows)       |              '), nl,
+  write('          ----------------------------------              '), nl,
+  read(Input),
+  number(Input),
+  !,
+  aztec_autogenerator(Input,Table).
+
+
+
+manageInputMenu(2):-
+ repeat,
+ write('          ----------------------------------              '), nl,
+ write('          |  How big should the level be?  |              '), nl,
+ write('          |       (Tip: 4 to 8 rows)       |              '), nl,
+ write('          ----------------------------------              '), nl,
+ read(Input),
+ number(Input),
+ !,
+ aztec_level_creator(Input,Table).
+
+
+
+% ------------------- AUTO GENERATOR ---------------------
+aztec_autogenerator(N,Table):-
+ length(Table,N),
+ createTable(Table,1),
+ factorial(N,Size),
+ repeat,
+ randomNumberFiller(N,Size,Table),
+ copy_term(Table,SolvedTable),
+ aztec_solve(N,SolvedTable),
+ !,
+ aztec_play(N,Table,NewTable).
+
+
+aztec_play(N,Table,NewTable):-
+ repeat,
+ copy_term(Table,NewTable),
+ display_spaces(N), write('  ___'), nl,
+ display_aztec(NewTable, N),
+ write('     Choose a Row'),nl,
+ read(InputRow),
+ number(InputRow),
+ write('     Choose an Index'),nl,
+ read(InputIndex),
+ number(InputIndex),
+ 
+
+
+
+
+
+
+
+ write('          ----------------------------------              '), nl,
+ write('          |         1. Make a Play         |              '), nl,
+ write('          |            2. Undo             |              '), nl,
+ write('          ----------------------------------              '), nl,
+
+% copyTable([],[]).
+
+% copyTable([R1|Rows1],[R2|Rows2]):-
+%  copyList(R1,R2),
+%  copyTable(Rows1,Rows2).
+
+% copyList([],[]).
+
+% copyList([H|Row1],[H|Row2]):-
+%  copyList(Row1,Row2).
+
+
+
+randomNumberFiller(N,Size,Table):-
+ repeat,
+ randset(N,Size,Slots),
+ slotsFiller(Slots,Table),
+ !.
+
+
+slotsFiller([],Table).
+
+slotsFiller([S1|Slots],Table):-
+ random(1,10,Number),
+ tableFiller(S1,Number,Table),
+ slotsFiller(Slots,Table).
+
+
+
+
+% numberslotpicker(Size,Slot,Number,Slots):-
+%  repeat,
+%  RSize is Size+1,
+%  random(0,RSize,Slot),
+%  write(Slot), nl,
+%  slotsCheck(Slots,Slot),
+%  random(1,10,Number),
+%  !.
+
+
+% slotsCheck([],_).
+
+% slotsCheck([H|Rest],Slot):-
+%  H \== Slot,
+%  slotsCheck(Rest,Slot).
+
+% slotsCheck([H|Rest],Slot):-
+%  H == Slot,
+%  write('false'),
+%  false.
+
+% slotsCheck(H,Slot):-
+%  H \== Slot.
+
+
+tableFiller(Slot,Number,[]):-
+ Slot == -1.
+
+tableFiller(Slot,Number,[R|RTable]):-
+ Slot == -1.
+
+tableFiller(Slot,Number,[R|RTable]):-
+ Slot \== -1,
+ rowFiller(Slot,NewSlot,Number,R),
+ tableFiller(NewSlot,Number,RTable).
+
+
+
+rowFiller(Slot,NewSlot,Number,[]):-
+ NewSlot is Slot.
+
+rowFiller(Slot,NewSlot,Number,[Index|Row]):-
+ Slot > 0,
+ Slot2 is Slot - 1,
+ rowFiller(Slot2,NewSlot,Number,Row).
+
+rowFiller(Slot,NewSlot,Number,[Index|Row]):-
+ Slot == 0,
+ NewSlot = -1,
+ Index = Number.
+
+
+
+factorial(N, R) :- factorial(N, 1, R).
+factorial(0, R, R) :- !.
+factorial(N, Acc, R) :-
+    NewN is N - 1,
+    NewAcc is Acc + N,
+    factorial(NewN, NewAcc, R).
+
+
+
+
+
+
+
+
+
+
+% aztec_check(N, TestTable):-
+%  constrainCheckTable(TestTable, 1).
+
+aztec_solve(N, TestTable):-
 %  all_distinct(Cols), 
 %  TestTable = ([[2],[1,2],[3,_,_]]),
  append(TestTable, TableList),
- domain(TableList,1,9),
-%  TableList ins 1..9,
+%  domain(TableList,1,9),
+ TableList ins 1..9,
  constrainTable(TestTable, 1),
- write('TEEEESTE'), nl,
- labeling([], TableList),
- display_spaces(N), write('  ___'), nl,
- display_aztec(TestTable, N),
- false.
+ labeling([], TableList).
+%  display_spaces(N), write('  ___'), nl,
+%  display_aztec(TestTable, N).
 
 
 
@@ -27,10 +210,9 @@ aztec_test(N):-
 %  all_distinct(Cols), 
 %  TestTable = ([[2],[1,1],[3,2,2]]),
  append(Table, TableList),
- domain(TableList,1,9),
-%  TableList ins 1..9,
+%  domain(TableList,1,9),
+ TableList ins 1..9,
  constrainTable(Table, 1),
- write('TEEEESTE'), nl,
  labeling([], TableList),
  display_spaces(N), write('  ___'), nl,
  display_aztec(Table, N),
@@ -38,6 +220,7 @@ aztec_test(N):-
 %  write(Table).
 
 
+% ------ CREATION -------
 createTable([], _).
 
 createTable([H | RTable], N):-
@@ -50,12 +233,10 @@ createTable([H | RTable], N):-
 constrainTable([],_).
 
 constrainTable([H | RTable], N):-
- write('test Pre Constrain Row'), nl,
  separateRows(H, RTable, R2),
  constrainRow(H, R2, N),
  N1 is N + 1,
  constrainTable(RTable, N1).
-
 
 
 separateRows(_,[],_).
@@ -64,37 +245,78 @@ separateRows(H, [Row2 | RTable], R2):-
  R2 = Row2.
 
 
-
-
 constrainRow([],_,_).
 
 constrainRow(_,[],_).
 
 constrainRow([H | Row], [H2 | Row2], N):-
- write('test Pre Sep3Var'), nl,
  separateInto3Variables(H, H2, Row2, N1R1, N1R2, N2R2),
- write('test Post Sep3Var'), nl,
 %  write(RTable), nl,
 %  write(N1R1), nl,
 %  write(N1R2), nl,
 %  write(N2R2), nl,
- write('test Conditions'), nl,
  ((N1R1 #= N1R2 + N2R2) #\/
  (N1R1 #= N1R2 - N2R2) #\/
  (N1R1 #= N2R2 - N1R2) #\/
  (N1R1 #= N1R2 * N2R2) #\/
  (N1R2#>=N2R2 #/\ N1R1 #= N1R2 div N2R2 #/\ rem(N1R2,N2R2) #= 0) #\/
  (N2R2#>=N1R2 #/\ N1R1 #= N2R2 div N1R2 #/\ rem(N2R2,N1R2) #= 0)),
- write('test Pos Constrain Row'), nl,
  constrainRow(Row, Row2, N).
-
-
 
 
 separateInto3Variables(H1, H2, [H3 | Row2], N1R1, N1R2, N2R2):-
  N1R1 = H1,
  N1R2 = H2,
  N2R2 = H3.
+
+
+
+% ------ CHECK -------
+
+constrainCheckTable([],_).
+
+constrainCheckTable([H | RTable], N):-
+ separateRows(H, RTable, R2),
+ constrainCheckRow(H, R2, N),
+ N1 is N + 1,
+ constrainCheckTable(RTable, N1).
+
+
+separateRows(_,[],_).
+
+separateRows(H, [Row2 | RTable], R2):-
+ R2 = Row2.
+
+
+constrainCheckRow([],_,_).
+
+constrainCheckRow(_,[],_).
+
+constrainRow([H | Row], [H2 | Row2], N):-
+ separateInto3VariablesCheck(H, H2, Row2, N1R1, N1R2, N2R2),
+%  write(RTable), nl,
+%  write(N1R1), nl,
+%  write(N1R2), nl,
+%  write(N2R2), nl,
+ ((N1R1 #= N1R2 + N2R2) #\/
+ (N1R1 #= N1R2 - N2R2) #\/
+ (N1R1 #= N2R2 - N1R2) #\/
+ (N1R1 #= N1R2 * N2R2) #\/
+ (N1R2#>=N2R2 #/\ N1R1 #= N1R2 div N2R2 #/\ rem(N1R2,N2R2) #= 0) #\/
+ (N2R2#>=N1R2 #/\ N1R1 #= N2R2 div N1R2 #/\ rem(N2R2,N1R2) #= 0)),
+ constrainRow(Row, Row2, N).
+
+
+separateInto3VariablesCheck(H1, H2, [H3 | Row2], N1R1, N1R2, N2R2):-
+ domainCheck(H1,1),
+ domainCheck(H2,1),
+ domainCheck(H3,1),
+ N1R1 = H1,
+ N1R2 = H2,
+ N2R2 = H3.
+
+
+
 
 
 
@@ -148,6 +370,20 @@ isSlotFree(H, N):-
  H == N,
  write('_'), write(H), write('_').
 
+
+domainCheck(H, N):-
+ N > 9,
+ false.
+
+domainCheck(H, N):-
+ N < 10,
+ H \== N,
+ N1 is N + 1,
+ domainCheck(H, N1).
+
+domainCheck(H, N):-
+ N < 10,
+ H == N.
 
 
 display_spaces(N):-
