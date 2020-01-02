@@ -32,6 +32,7 @@ menu:-
   write('          ----------------------------------              '), nl,
   read(Input),
   number(Input),
+  Input > 0,
   !,
   aztec_autogenerator(Input,Table).
 
@@ -45,6 +46,7 @@ manageInputMenu(2):-
  write('          ----------------------------------              '), nl,
  read(Input),
  number(Input),
+ Input > 0,
  !,
  aztec_level_creator(Input,Table).
 
@@ -74,18 +76,40 @@ aztec_play(N,Table,NewTable):-
  write('     Choose an Index'),nl,
  read(InputIndex),
  number(InputIndex),
- 
+ Row is InputRow - 1,
+ factorial(Row, NewRow),
+ Index is InputIndex - 1,
+ Slot is NewRow + Index,
+ write(Slot),nl,
+ write('     Choose a Number'),nl,
+ read(InputNumber),
+ number(InputNumber),
+ write(Slot),nl,write(InputNumber),nl,write(NewTable),nl,  
+ tableFiller(Slot,InputNumber,NewTable),
+ copy_term(NewTable,TestTable),
+ aztec_solve(N,TestTable),
+ !,
+ playMenu(N,Table,NewTable).
 
-
-
-
-
-
-
+playMenu(N,Table,NewTable):-
  write('          ----------------------------------              '), nl,
  write('          |         1. Make a Play         |              '), nl,
  write('          |            2. Undo             |              '), nl,
  write('          ----------------------------------              '), nl,
+ read(Input),
+ managePlayMenu(Input, N, Table, NewTable).
+
+managePlayMenu(1, N, Table, NewTable):-
+ aztec_play(N,NewTable,X).
+
+managePlayMenu(2, N, Table, NewTable):-
+ aztec_play(N,Table,X).
+
+
+
+
+
+
 
 % copyTable([],[]).
 
