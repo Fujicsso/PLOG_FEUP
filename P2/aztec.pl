@@ -34,7 +34,25 @@ menu:-
   number(Input),
   Input > 0,
   !,
-  aztec_autogenerator(Input,Table).
+  manageInputMenu2(Input).
+
+
+
+
+manageInputMenu2(Input):-
+ factorial(Input,Size),
+ repeat,
+ write('          ----------------------------------              '), nl,
+ write('          |  How many tips should it have? |              '), nl,
+ write('          |  (Tip: same as the level size) |              '), nl,
+ write('          |         [0 to '),write(Size),write(']              |              '),nl,
+ write('          ----------------------------------              '), nl,
+ read(Input2),
+ number(Input2),
+ Input2 > 0,
+ Input2 < Size,
+ !,
+ aztec_autogenerator(Input,Input2,Table).
 
 
 
@@ -53,63 +71,123 @@ manageInputMenu(2):-
 
 
 % ------------------- AUTO GENERATOR ---------------------
-aztec_autogenerator(N,Table):-
+aztec_autogenerator(N,Tips,Table):-
  length(Table,N),
  createTable(Table,1),
  factorial(N,Size),
  repeat,
- randomNumberFiller(N,Size,Table),
+ randomNumberFiller(Tips,Size,Table),
  copy_term(Table,SolvedTable),
- aztec_solve(N,SolvedTable),
+ aztec_solve(SolvedTable),
  !,
+ generatedMenu(N,Table,SolvedTable).
+
+
+
+
+generatedMenu(N,Table,SolvedTable):-
+ display_spaces(N), write('     ___'), nl,
+ display_aztec(Table, N),
+ replay,
+ write('          ----------------------------------              '), nl,
+ write('          |         1. Make a Play         |              '), nl,
+ write('          | 2. Display a Possible Solution |              '), nl,
+ write('          ----------------------------------              '), nl,
+ read(Input),
+ Input > 0,
+ Input < 3,
+ !,
+ manageGeneratedMenu(Input, N, Table, SolvedTable).
+
+
+manageGeneratedMenu(1, N, Table, SolvedTable):-
  aztec_play(N,Table,NewTable).
+
+manageGeneratedMenu(2, N, Table, SolvedTable):-
+ display_spaces(N), write('     ___'), nl,
+ display_aztec(SolvedTable, N),
+ generatedMenu(N,Table,SolvedTable).
+
+
+
 
 
 aztec_play(N,Table,NewTable):-
  repeat,
  copy_term(Table,NewTable),
- display_spaces(N), write('  ___'), nl,
- display_aztec(NewTable, N),
- write('     Choose a Row'),nl,
+ write('     Choose a Row (1 to '),write(N),write(')'),nl,
  read(InputRow),
  number(InputRow),
- write('     Choose an Index'),nl,
+ InputRow > 0,
+ InputRow =< N,
+ write('     Choose an Index (1 to '),write(InputRow),write(')'),nl,
  read(InputIndex),
  number(InputIndex),
+ InputIndex > 0,
+ InputIndex =< InputRow,
  Row is InputRow - 1,
  factorial(Row, NewRow),
  Index is InputIndex - 1,
  Slot is NewRow + Index,
- write(Slot),nl,
- write('     Choose a Number'),nl,
+ write('     Choose a Number (0 to 9)'),nl,
  read(InputNumber),
  number(InputNumber),
- write(Slot),nl,write(InputNumber),nl,write(NewTable),nl,  
  tableFiller(Slot,InputNumber,NewTable),
  copy_term(NewTable,TestTable),
- aztec_solve(N,TestTable),
+ aztec_solve(TestTable),
  !,
- playMenu(N,Table,NewTable).
+ playMenu(N,Table,NewTable,TestTable).
 
-playMenu(N,Table,NewTable):-
+
+playMenu(N,Table,NewTable,TestTable):-
+ isGameOver(NewTable),
+ write('Congrats! You made it!'),nl,
+ read(Input),
+ abort.
+
+playMenu(N,Table,NewTable,TestTable):-
+ display_spaces(N), write('     ___'), nl,
+ display_aztec(NewTable, N),
+ replay,
  write('          ----------------------------------              '), nl,
  write('          |         1. Make a Play         |              '), nl,
- write('          |            2. Undo             |              '), nl,
+ write('          |       2. Undo Last Play        |              '), nl,
+ write('          | 3. Display a Possible Solution |              '), nl,
  write('          ----------------------------------              '), nl,
  read(Input),
- managePlayMenu(Input, N, Table, NewTable).
+ Input > 0,
+ Input < 4,
+ !,
+ managePlayMenu(Input, N, Table, NewTable, TestTable).
 
-managePlayMenu(1, N, Table, NewTable):-
+managePlayMenu(1, N, Table, NewTable, TestTable):-
  aztec_play(N,NewTable,X).
 
-managePlayMenu(2, N, Table, NewTable):-
+managePlayMenu(2, N, Table, NewTable, TestTable):-
  aztec_play(N,Table,X).
 
+managePlayMenu(3, N, Table, NewTable, TestTable):-
+ display_spaces(N), write('     ___'), nl,
+ display_aztec(TestTable, N),
+ playMenu(N,Table,NewTable,TestTable).
 
 
 
 
 
+
+
+isGameOver([]).
+
+isGameOver([R|Rtable]):-
+ rowFull(R),
+ isGameOver(Rtable).
+
+rowFull([]).
+
+rowFull([I|Row]):-
+ domainCheck(I,1),
+ rowFull(Row).
 
 % copyTable([],[]).
 
@@ -127,18 +205,52 @@ managePlayMenu(2, N, Table, NewTable):-
 randomNumberFiller(N,Size,Table):-
  repeat,
  randset(N,Size,Slots),
- slotsFiller(Slots,Table),
+ slotsFiller(N,Slots,Table),
  !.
 
 
-slotsFiller([],Table).
 
-slotsFiller([S1|Slots],Table):-
+
+slotsFiller(0,[],Table).
+
+slotsFiller(N,[],Table).
+
+% slotsFiller(N,[S1|Slots],Table):-
+%  length(Table,Leng),
+%  N =< Leng,
+%  write('N ultrapassado'),nl,
+%  copy_term(Table,SolvedTable),
+%  aztec_solve(SolvedTable),
+%  equalIndex(S1,Table,SolvedTable),
+%  slotsFiller(0,Slots,Table,SolvedTable).
+
+
+slotsFiller(N,[S1|Slots],Table):-
+%  length(Table,Leng),
+%  N > Leng,
+ write(N),nl,
+ repeat,
  random(1,10,Number),
- tableFiller(S1,Number,Table),
- slotsFiller(Slots,Table).
+ S is S1 - 1,
+ tableFiller(S,Number,Table),
+ copy_term(Table,SolvedTable),
+ aztec_solve(SolvedTable),
+%  write(Number), write('   '), write(S1), nl,
+%  length(Table,N),
+%  display_spaces(N), write('     ___'), nl,
+%  display_aztec(Table, N),
+%  write(Table),nl,
+%  write(SolvedTable), nl, 
+ !,
+ N1 is N-1,
+ slotsFiller(N1,Slots,Table).
 
+% slotsFiller(0,[],Table,SolvedTable).
 
+% slotsFiller(0,[S1|Slots],Table,SolvedTable):-
+%  equalIndex(S1,Table,SolvedTable),
+%  write(Table),
+%  slotsFiller(0,Slots,Table,SolvedTable).
 
 
 % numberslotpicker(Size,Slot,Number,Slots):-
@@ -194,7 +306,33 @@ rowFiller(Slot,NewSlot,Number,[Index|Row]):-
 
 
 
-factorial(N, R) :- factorial(N, 1, R).
+equalIndex(Slot,[],[]):-
+ Slot == -1.
+
+equalIndex(Slot,[R1|RTable1],[RS|RTableS]):-
+ Slot == -1.
+
+equalIndex(Slot,[R1|RTable1],[RS|RTableS]):-
+ Slot \== -1,
+ equalIndexRow(Slot,NewSlot,R,RS),
+ equalIndex(NewSlot,RTable1,RTableS).
+
+
+equalIndexRow(Slot,NewSlot,[],[]):-
+ NewSlot is Slot.
+
+equalIndexRow(Slot,NewSlot,[Index1|Row1],[IndexS|RowS]):-
+ Slot > 0,
+ Slot2 is Slot - 1,
+ equalIndexRow(Slot2,NewSlot,Row1,RowS).
+
+equalIndexRow(Slot,NewSlot,[Index1|Row1],[IndexS|RowS]):-
+ Slot == 0,
+ NewSlot = -1,
+ Index1 = IndexS.
+
+
+factorial(N, R) :- factorial(N, 0, R).
 factorial(0, R, R) :- !.
 factorial(N, Acc, R) :-
     NewN is N - 1,
@@ -213,15 +351,15 @@ factorial(N, Acc, R) :-
 % aztec_check(N, TestTable):-
 %  constrainCheckTable(TestTable, 1).
 
-aztec_solve(N, TestTable):-
+aztec_solve(TestTable):-
 %  all_distinct(Cols), 
-%  TestTable = ([[2],[1,2],[3,_,_]]),
+%  TestTable = ([[2],[A,B],[7,C,6],[D,E,F,G],[4,H,5,I,3]]),
  append(TestTable, TableList),
 %  domain(TableList,1,9),
  TableList ins 1..9,
  constrainTable(TestTable, 1),
  labeling([], TableList).
-%  display_spaces(N), write('  ___'), nl,
+ %  display_spaces(N), write('  ___'), nl,
 %  display_aztec(TestTable, N).
 
 
@@ -238,7 +376,7 @@ aztec_test(N):-
  TableList ins 1..9,
  constrainTable(Table, 1),
  labeling([], TableList),
- display_spaces(N), write('  ___'), nl,
+ display_spaces(N), write('       ___'), nl,
  display_aztec(Table, N),
  false.
 %  write(Table).
@@ -257,6 +395,7 @@ createTable([H | RTable], N):-
 constrainTable([],_).
 
 constrainTable([H | RTable], N):-
+ all_distinct(H),
  separateRows(H, RTable, R2),
  constrainRow(H, R2, N),
  N1 is N + 1,
@@ -362,7 +501,7 @@ noattack(X,Y,K) :-
 display_aztec([],_).
 
 display_aztec([H | TCol], N):-
- display_spaces(N),
+ display_spaces(N), write('   '),
  write('_|'), display_aztec_row(H), write('_'), nl,
  N1 is N - 1,
  display_aztec(TCol, N1).
