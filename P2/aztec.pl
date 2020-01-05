@@ -31,7 +31,6 @@ menu:-
  repeat,
  write('          ------------------------------          '), nl,
  write('          |  1. Solve a Random Level   |          '), nl,
-%  write('          |  2. Make a Level           |          '), nl,
  write('          ------------------------------          '), nl,
  read(Input),
  manageInputMenu(Input),
@@ -71,18 +70,6 @@ manageInputMenu2(Input):-
  aztec_autogenerator(Input,Input2,Table).
 
 
-
-% manageInputMenu(2):-
-%  repeat,
-%  write('          ----------------------------------              '), nl,
-%  write('          |  How big should the level be?  |              '), nl,
-%  write('          |       (Tip: 4 to 8 rows)       |              '), nl,
-%  write('          ----------------------------------              '), nl,
-%  read(Input),
-%  number(Input),
-%  Input > 0,
-%  !,
-%  aztec_level_creator(Input,Table).
 
 
 
@@ -409,21 +396,6 @@ separateInto3VariablesCheck(H1, H2, [H3 | Row2], N1R1, N1R2, N2R2):-
 
 
 
-
-
-
-safe(_,[],_).
-
-safe(X,[Y | T], K):-
- noattack(X,Y,K),
- K1 is K + 1,
- safe(X,T,K1).
-
-
-noattack(X,Y,K) :-
- X #\= Y,
- X + K #\= Y,
- X - K #\= Y.
 
 
 
