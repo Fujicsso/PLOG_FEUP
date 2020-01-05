@@ -31,7 +31,7 @@ menu:-
  repeat,
  write('          ------------------------------          '), nl,
  write('          |  1. Solve a Random Level   |          '), nl,
- write('          |  2. Make a Level           |          '), nl,
+%  write('          |  2. Make a Level           |          '), nl,
  write('          ------------------------------          '), nl,
  read(Input),
  manageInputMenu(Input),
@@ -72,17 +72,17 @@ manageInputMenu2(Input):-
 
 
 
-manageInputMenu(2):-
- repeat,
- write('          ----------------------------------              '), nl,
- write('          |  How big should the level be?  |              '), nl,
- write('          |       (Tip: 4 to 8 rows)       |              '), nl,
- write('          ----------------------------------              '), nl,
- read(Input),
- number(Input),
- Input > 0,
- !,
- aztec_level_creator(Input,Table).
+% manageInputMenu(2):-
+%  repeat,
+%  write('          ----------------------------------              '), nl,
+%  write('          |  How big should the level be?  |              '), nl,
+%  write('          |       (Tip: 4 to 8 rows)       |              '), nl,
+%  write('          ----------------------------------              '), nl,
+%  read(Input),
+%  number(Input),
+%  Input > 0,
+%  !,
+%  aztec_level_creator(Input,Table).
 
 
 
