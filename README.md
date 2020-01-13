@@ -1,6 +1,6 @@
 # PLOG
 
-In the files "P1" and "P2" are the 2 projects developed for this chair.
+In the files "P1" and "P2" are the 2 projects developed for this curricular unit.
 To run them just install Sicstus (for work one) and SwiProlog (for work 2) and run: main.pl and type "play." for "P1" / aztec.pl and type "aztec." for "P2".
 
 The first work is a reproduction of the game Nudge, with the instructions on the PDF included.
